@@ -1,0 +1,25 @@
+{
+    "name": "@wjheesen/glib",
+    "version": "1.0.0",
+    "description": "2d graphics library",
+    "main": "dist/main.js",
+    "typings": "dist/index.d.ts",
+    "author": "wjheesen",
+    "license": "ISC",
+    "devDependencies": {
+        "@types/chai": "^4.2.14",
+        "@types/mocha": "*",
+        "chai": "*",
+        "mocha": "*",
+        "ts-loader": "^8.0.1",
+        "ts-node": "^9.0.0",
+        "typescript": "^4.1.2",
+        "webpack": "^5.6.0",
+        "webpack-cli": "^4.2.0"
+    },
+    "scripts": {
+        "build": "webpack",
+        "test": "env TS_NODE_COMPILER_OPTIONS='{\"module\": \"commonjs\" }' mocha"
+    },
+    "dependencies": {}
+}
