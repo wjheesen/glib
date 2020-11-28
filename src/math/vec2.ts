@@ -1,4 +1,5 @@
 import { PointLike } from "./point";
+import { containsX, RectLike } from "./rect";
 
 /** A two-dimensional vector with (x,y) components */
 export interface Vec2Like {
@@ -92,6 +93,27 @@ export function fromPointToPoint(p1: PointLike, p2: PointLike, out = <Vec2Like> 
     out.x = p2.x - p1.x;
     out.y = p2.y - p1.y;
     return out;
+}
+
+/** Bounds a translation vector to prevent it from mapping point p outside of bounds r */
+export function bound(v: Vec2Like, p: PointLike, b: RectLike, out = <Vec2Like> {}) {
+    out.x = boundX(v.x, p.x, b);
+    out.y = boundY(v.y, p.y, b);
+    return out;
+}
+
+/** Bounds the x-component of a translation vector to prevent it from mapping the x-coordinate of a point outside of bounds b */
+export function boundX(dx: number, x: number, b: RectLike) {
+    let targetX = dx + x;
+    let side = dx < 0 ? b.left : b.right;
+    return containsX(b, targetX) ? dx : side - x;
+}
+
+/** Bounds the y-component of a translation vector to prevent it from mapping the y-coordinate of a point outside of bounds b */
+export function boundY(dy: number, y: number, b: RectLike) {
+    let targetY = dy + y;
+    let side = dy < 0 ? b.bottom : b.top;
+    return containsX(b, targetY) ? dy : side - y;
 }
 
 /**

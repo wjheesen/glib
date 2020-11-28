@@ -1,5 +1,5 @@
 import { expect } from 'chai';
-import { area, bottomLeft, bottomRight, center, centerX, centerY, contains, containsPoint, dimensions, empty, height, inset, offset, intersect, intersects, isEmpty, isValid, topLeft, topRight, union, unionPoint, width, sort, equals, copy } from './rect';
+import { area, bottomLeft, bottomRight, center, centerX, centerY, contains, containsPoint, dimensions, empty, height, inset, offset, intersect, intersects, isEmpty, isValid, topLeft, topRight, union, unionPoint, width, sort, equals, copy, offsetX, offsetY } from './rect';
 
 describe('rect', () => {
 
@@ -45,55 +45,55 @@ describe('rect', () => {
         })
     })
 
-    describe('#area', () => {
+    describe('#area()', () => {
         it('correctly measures the area of a rect', () => {
             expect(area(r1)).to.equal(12);
         })
     })
 
-    describe('#center', () => {
+    describe('#center()', () => {
         it('correctly measures the center point of a rect', () => {
             expect(center(r1)).deep.equals({x: 2.5, y: 0})
         })
     })
 
-    describe('#centerX', () => {
+    describe('#centerX()', () => {
         it('correctly measures the center x coordinate of a rect', () => {
             expect(centerX(r1)).to.equal(2.5);
         })
     })
 
-    describe('#centerY', () => {
+    describe('#centerY()', () => {
         it('correctly measures the center y coordinate of a rect', () => {
             expect(centerY(r1)).to.equal(0);
         })
     })
 
-    describe('#topLeft', () => {
+    describe('#topLeft()', () => {
         it('returns the top left coordinate of a rect', () => {
             expect(topLeft(r1)).deep.equals({x: 1, y: 2});
         })
     })
 
-    describe('#bottomLeft', () => {
+    describe('#bottomLeft()', () => {
         it('returns the bottom left coordinate of a rect', () => {
             expect(bottomLeft(r1)).deep.equals({x: 1, y: -2});
         })
     })
 
-    describe('#bottomRight', () => {
+    describe('#bottomRight()', () => {
         it('returns the bottom right coordinate of a rect', () => {
             expect(bottomRight(r1)).deep.equals({x: 4, y: -2});
         })
     })
 
-    describe('#topRight', () => {
+    describe('#topRight()', () => {
         it('returns the top right coordinate of a rect', () => {
             expect(topRight(r1)).deep.equals({x: 4, y: 2});
         })
     })
 
-    describe('#isEmpty', () => {
+    describe('#isEmpty()', () => {
         it('returns true for rect with all zero coordinates', () => {
             expect(isEmpty(empty())).to.be.true;
         })
@@ -108,7 +108,7 @@ describe('rect', () => {
         })
     })
     
-    describe('#isValid', () => {
+    describe('#isValid()', () => {
         it('returns false if width < 0', () => {
             expect(isValid(dimensions(0, 0, -1, 1))).to.be.false;
         })
@@ -117,7 +117,7 @@ describe('rect', () => {
         })
     })
 
-    describe('#union', () => {
+    describe('#union()', () => {
         it('creates the smallest possible rect containing both of the specified rects', () => {
             let u = union(r1, r2);
             expect(contains(u, r1)).to.be.true;
@@ -131,7 +131,7 @@ describe('rect', () => {
         })
     })
 
-    describe('#union', () => {
+    describe('#union()', () => {
         let r = dimensions(0, 0, 1, 1);
         it('minimally expands the rect to contain the original rect and the specified point', () => {
             let p = {x: -2, y: -3};
@@ -145,7 +145,7 @@ describe('rect', () => {
         })
     })
 
-    describe('#intersects', () => {
+    describe('#intersects()', () => {
         it('returns true if one of the rects contains the other rectangle', () => {
             let u = union(r1, r2);
             expect(intersects(u, r1)).to.be.true;
@@ -159,7 +159,7 @@ describe('rect', () => {
         })
     });
 
-    describe('#intersect', () => {
+    describe('#intersect()', () => {
         it('correctly finds the intersection of two overlapping rects', () => {
             expect(intersect(r1, r2)).deep.equals({left: 5, top: 2, right: 4, bottom: -2});
         });
@@ -171,7 +171,7 @@ describe('rect', () => {
         });
     })
 
-    describe('#inset', () => {
+    describe('#inset()', () => {
         it('correctly insets the rect by the specified vector', () => {
             expect(inset(r1, {x: 1, y: 2})).deep.equals({left: 2, top: 0, right: 3, bottom: 0});
         })
@@ -180,7 +180,7 @@ describe('rect', () => {
         })
     })
 
-    describe('#offset', () => {
+    describe('#offset()', () => {
         it('correctly offsets the rect by the specified vector', () => {
             expect(offset(r1, {x: 1, y: 2})).deep.equals({left: 2, top: 4, right: 5, bottom: 0});
         })
@@ -191,7 +191,23 @@ describe('rect', () => {
         });
     })
 
-    describe('#contains', () => {
+    describe('#offsetX()', () => {
+        it('never changes the top and bottom rect coordinates', () => {
+            let rb = offsetX(r1, 23);
+            expect(rb.top).equals(r1.top);
+            expect(rb.bottom).equals(r1.bottom);
+        })
+    })
+
+    describe('#offsetY()', () => {
+        it('never changes the left and right rect coordinates', () => {
+            let rb = offsetY(r1, 23);
+            expect(rb.left).equals(r1.left);
+            expect(rb.right).equals(r1.right);
+        })
+    })
+
+    describe('#contains()', () => {
         it('returns true if both rects are the same', () => {
             expect(contains(r1, r1)).to.be.true;
         })
@@ -203,7 +219,7 @@ describe('rect', () => {
         });
     });
 
-    describe('#containsPoint', () => {
+    describe('#containsPoint()', () => {
         it('returns true for points inside the rect', () => {
             expect(containsPoint(r1, center(r1))).to.be.true;
         })
@@ -215,7 +231,7 @@ describe('rect', () => {
         })
     })
 
-    describe('#sort', () => {
+    describe('#sort()', () => {
         it('causes an invalid rect to become valid', () => {
             expect(isValid(sort(dimensions(0, 0, -1, -1)))).to.be.true;
         })

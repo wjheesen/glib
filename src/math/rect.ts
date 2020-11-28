@@ -159,6 +159,16 @@ export function offset(r: RectLike, {x, y}: Vec2Like, out = <RectLike> {}) {
     return out;
 }
 
+/** Offsets the position of a rect by the specified change in x (dx) */
+export function offsetX(r: RectLike, dx: number, out = <RectLike> {}) {
+    return offset(r, {x: dx, y: 0}, out);
+}
+
+/** Offsets the position of a rect by the specified change in y (dy) */
+export function offsetY(r: RectLike, dy: number, out = <RectLike> {}) {
+    return offset(r, {x: 0, y: dy}, out);
+}
+
 /** Checks if r1 contains r2 */
 export function contains(r1: RectLike, r2: RectLike) {
     return r1.left <= r2.left && r2.right <= r1.right &&

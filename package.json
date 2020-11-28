@@ -1,6 +1,6 @@
 {
     "name": "@wjheesen/glib",
-    "version": "1.0.3",
+    "version": "1.0.4",
     "description": "2d graphics library",
     "main": "dist/index.js",
     "typings": "dist/index.d.ts",

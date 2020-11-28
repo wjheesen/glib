@@ -1,5 +1,6 @@
 import { expect } from 'chai';
-import { add, copy, cross, divide, dot, equals, fromPointToPoint, length, length2, multiply, normalize, rotate180, rotate270, rotate90, subtract } from './vec2';
+import { containsPoint, dimensions } from './rect';
+import { add, bound, boundX, copy, cross, divide, dot, equals, fromPointToPoint, length, length2, multiply, normalize, rotate180, rotate270, rotate90, subtract } from './vec2';
 
 describe('vec2', () => {
 
@@ -88,6 +89,56 @@ describe('vec2', () => {
         it('measures the vector from one point to another', () => {
             expect(fromPointToPoint(v1, v2)).deep.equals({x: 2, y: 2});
         })
+    })
+
+    describe('#bound()', () => {
+        let p = {x: 0, y: 0};
+        let b = dimensions(0, 2, 2, 2);
+        it('does nothing if the translation vector would not cause the point to go out of bounds', () => {
+            expect(containsPoint(b, add(v1, p))).to.be.true;
+            expect(bound(v1, p, b)).deep.equals(v1);
+        })
+
+        it('shortens the translation vector to prevent the point from going out of bounds', () => {
+            let vb = bound(v2, p, b);
+            expect(containsPoint(b, add(v2, p))).to.be.false;
+            expect(containsPoint(b, add(vb, p))).to.be.true;
+            expect(length2(vb)).lessThan(length2(v2));
+        })
+    });
+
+    describe('#boundX()', () => {
+        let x = 0;
+        let b = dimensions(0, 2, 2, 2);
+        it('does nothing if the change in x would not cause the point to go out of bounds', () => {
+            let dx = 1;
+            expect(boundX(dx, x, b)).deep.equals(dx);
+        });
+        it('maps to the left boundary if the change in x would cause the point to fall to the left of the bounds', () => {
+            let dx = -192;
+            expect(boundX(dx, x, b) + x).deep.equals(b.left);
+        });
+        it('maps to the right boundary if the change in x would cause the point to fall to the right of the bounds', () => {
+            let dx = 51;
+            expect(boundX(dx, x, b) + x).deep.equals(b.right);
+        });
+    })
+
+    describe('#boundX()', () => {
+        let y = 0;
+        let b = dimensions(0, 2, 2, 2);
+        it('does nothing if the change in y would not cause the point to go out of bounds', () => {
+            let dy = 1;
+            expect(boundX(dy, y, b)).deep.equals(dy);
+        });
+        it('maps to the bottom boundary if the change in y would cause the point to fall below the bounds', () => {
+            let dy = -192;
+            expect(boundX(dy, y, b) + y).deep.equals(b.bottom);
+        });
+        it('maps to the top boundary if the change in y would cause the point to fall above the bounds', () => {
+            let dy = 51;
+            expect(boundX(dy, y, b) + y).deep.equals(b.top);
+        });
     })
 
     describe('#equals()', () => {
