@@ -1,8 +1,8 @@
 {
     "name": "@wjheesen/glib",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "description": "2d graphics library",
-    "main": "dist/main.js",
+    "main": "dist/index.js",
     "typings": "dist/index.d.ts",
     "author": "wjheesen",
     "license": "ISC",
@@ -18,7 +18,7 @@
         "webpack-cli": "^4.2.0"
     },
     "scripts": {
-        "build": "webpack",
+        "prepublish": "tsc",
         "test": "env TS_NODE_COMPILER_OPTIONS='{\"module\": \"commonjs\" }' mocha"
     },
     "dependencies": {}
