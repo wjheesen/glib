@@ -11,3 +11,4 @@ export * from './buffer/color-buffer';
 export * from './buffer/mat2d-buffer';
 export * from './buffer/typed-array';
 export * from './buffer/vec2-buffer';
+export * from './tool/stroke';
