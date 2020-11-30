@@ -1,11 +1,11 @@
 import { expect } from 'chai';
-import * as point from './point';
-import { concat, conjugate, identity, invert, rotate, stretch, translate, Mat2dLike, determinant, mapPoint, pivot, scale, mapRect, equals, sinCos, rectToRect, ScaleToFit, scaleToPoint, stretchRotateToPoint, copy} from './mat2d';
+import { Point } from '..';
+import { concat, conjugate, identity, invert, rotate, stretch, translate, Like, determinant, mapPoint, pivot, scale, mapRect, equals, sinCos, rectToRect, ScaleToFit, scaleToPoint, stretchRotateToPoint, copy} from './mat2d';
 import { dimensions, area, width, height, center, bottomRight, contains, topLeft } from './rect';
 
 describe('mat2d', () => {
 
-    let m = <Mat2dLike> {
+    let m = <Like> {
         c1r1: 1, c2r1: 2, c3r1: 3,
         c1r2: 5, c2r2: 7, c3r2: 11
     };
@@ -141,7 +141,7 @@ describe('mat2d', () => {
         let p = {x: 6, y: 5};
         let s = stretchRotateToPoint(start, end, p);
         it('maps the start point to the end point', () => {
-            expect(point.equals(mapPoint(s, start), end, 0.00001)).to.be.true;
+            expect(Point.equals(mapPoint(s, start), end, 0.00001)).to.be.true;
         })
         it('fixes the pivot point', () => {
             expect(mapPoint(s, p)).deep.equals(p);

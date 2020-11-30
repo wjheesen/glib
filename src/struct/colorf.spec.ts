@@ -1,8 +1,8 @@
 import { expect } from 'chai';
-import { ColorLike, copy, fromRgbaInt, fromRgbInt, isOpaque as isOpaqueColor } from './color';
+import { Like, copy, fromRgbaInt, fromRgbInt, isOpaque as isOpaqueColor } from './color';
 import { fromColor, isOpaque, premultiplyAlpha, random, toColor, equals } from './colorf';
 
-let c1 = <ColorLike> {r: 0.3, g: 0.2, b: 0.5, a: 0.7};
+let c1 = <Like> {r: 0.3, g: 0.2, b: 0.5, a: 0.7};
 
 describe('colorf', () => {
     describe('#equals()', () => {

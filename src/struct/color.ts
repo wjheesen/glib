@@ -1,6 +1,6 @@
 import { pad, randomByte } from "./util";
 
-export interface ColorLike {
+export interface Like {
     /** The red component of this color, a value between 0 and 0xff */
     r: number;
     /** The green component of this color, a value between 0 and 0xff */
@@ -12,7 +12,7 @@ export interface ColorLike {
 }
 
 /** Copies a color */
-export function copy(c: ColorLike, out = <ColorLike> {}) {
+export function copy(c: Like, out = <Like> {}) {
     out.r = c.r;
     out.g = c.g;
     out.b = c.b;
@@ -21,7 +21,7 @@ export function copy(c: ColorLike, out = <ColorLike> {}) {
 }
 
 /** Converts an 0xrrggbbaa int to a color */
-export function fromRgbaInt(rgba: number, out = <ColorLike> {}) {
+export function fromRgbaInt(rgba: number, out = <Like> {}) {
     out.r = (rgba >> 24) & 0xff;
     out.g = (rgba >> 16) & 0xff;
     out.b = (rgba >> 8) & 0xff;
@@ -30,12 +30,12 @@ export function fromRgbaInt(rgba: number, out = <ColorLike> {}) {
 }
 
 /** Converts an 0xrrggbb int to a (fully opaque) color */
-export function fromRgbInt(rgb: number, out = <ColorLike> {}) {
+export function fromRgbInt(rgb: number, out = <Like> {}) {
     return fromRgbaInt((rgb << 8) | 0xff, out);
 }
 
 /** Converts a color to an 0xrrggbbaa int */
-export function toRgbaInt(c: ColorLike) {
+export function toRgbaInt(c: Like) {
     let r = c.r << 24;
     let g = c.g << 16;
     let b = c.b << 8;
@@ -44,7 +44,7 @@ export function toRgbaInt(c: ColorLike) {
 }
 
 /** Converts an #aarrggbb string to a color. The leading # is optional. */
-export function fromArgbString(argb: string, out = <ColorLike> {}) {
+export function fromArgbString(argb: string, out = <Like> {}) {
     let i = argb[0] == '#' ? 1 : 0;
     out.a = parseInt(argb.substr(i, 2), 16);
     out.r = parseInt(argb.substr(i + 2, 2), 16);
@@ -54,7 +54,7 @@ export function fromArgbString(argb: string, out = <ColorLike> {}) {
 }
 
 /** Converts a color to an #aarrggbb string. */
-export function toArgbString(c: ColorLike) {
+export function toArgbString(c: Like) {
     let a = pad(c.a.toString(16)); // aa
     let r = pad(c.r.toString(16)); // rr
     let g = pad(c.g.toString(16)); // gg
@@ -63,7 +63,7 @@ export function toArgbString(c: ColorLike) {
 }
 
 /** Creates a random color. Preserves the alpha value of the out param if specified; otherwise defaults to fully opaque */
-export function random(out = <ColorLike> {}) {
+export function random(out = <Like> {}) {
     out.r = randomByte();
     out.g = randomByte();
     out.b = randomByte();
@@ -72,7 +72,7 @@ export function random(out = <ColorLike> {}) {
 }
 
 /** Blends src into dst using (src.alpha, 1-src.alpha) blend mode */
-export function blend(src: ColorLike, dst: ColorLike, out = <ColorLike> {}) {
+export function blend(src: Like, dst: Like, out = <Like> {}) {
     let alpha = src.a + 1, invAlpha = 256 - src.a;
     out.r = (alpha * src.r + invAlpha * dst.r) >> 8; // divide by 2^8
     out.g = (alpha * src.g + invAlpha * dst.g) >> 8;
@@ -82,17 +82,17 @@ export function blend(src: ColorLike, dst: ColorLike, out = <ColorLike> {}) {
 }
 
 /** Checks if a color is fully opaque */
-export function isOpaque(c: ColorLike) {
+export function isOpaque(c: Like) {
     return c.a === 0xff;
 }
 
 /** Checks if a color is fully transparent */
-export function isTransparent(c: ColorLike) {
+export function isTransparent(c: Like) {
     return c.a === 0;
 }
 
 /** Checks if c1 and c2 are equal */
-export function equals(c1: ColorLike, c2: ColorLike) {
+export function equals(c1: Like, c2: Like) {
     return c1.r == c2.r
         && c1.g == c2.g
         && c1.b == c2.b

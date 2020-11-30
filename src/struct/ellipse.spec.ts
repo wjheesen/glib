@@ -1,8 +1,7 @@
 import { expect } from 'chai';
+import { Point, Vec2 } from '..';
 import { circle, containsPoint, copy, equals, fromRect } from './ellipse';
 import { center, dimensions, height, width } from './rect';
-import * as p from './point';
-import { add } from './vec2';
 
 describe('ellipse', () => {
 
@@ -32,7 +31,7 @@ describe('ellipse', () => {
             let e = fromRect(r);
             expect(e.rx).equals(width(r) / 2);
             expect(e.ry).equals(height(r) / 2);
-            expect(p.equals(e.c, center(r))).to.be.true;
+            expect(Point.equals(e.c, center(r))).to.be.true;
         })
     })
 
@@ -41,13 +40,13 @@ describe('ellipse', () => {
             expect(containsPoint(e1, e1.c)).to.be.true;
         })
         it('always contains its boundary points', () => {
-            let left = add(e1.c, {x: e1.rx, y: 0});
-            let top = add(e1.c, {x: 0, y: e1.ry});
+            let left = Vec2.add(e1.c, {x: e1.rx, y: 0});
+            let top = Vec2.add(e1.c, {x: 0, y: e1.ry});
             expect(containsPoint(e1, left)).to.be.true;
             expect(containsPoint(e1, top)).to.be.true;
         })
         it('returns false for points outside the ellipse', () => {
-            expect(containsPoint(e1, add(e1.c, {x: e1.rx, y: e1.ry}))).to.be.false;
+            expect(containsPoint(e1, Vec2.add(e1.c, {x: e1.rx, y: e1.ry}))).to.be.false;
         })
     })
 

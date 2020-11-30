@@ -1,9 +1,9 @@
 import { expect } from 'chai';
-import { ColorLike, copy, equals, fromArgbString, toArgbString, fromRgbaInt, isOpaque, isTransparent, toRgbaInt, blend, random, fromRgbInt } from './color';
+import { Like, copy, equals, fromArgbString, toArgbString, fromRgbaInt, isOpaque, isTransparent, toRgbaInt, blend, random, fromRgbInt } from './color';
 
 describe('color', () => {
 
-    let c1 = <ColorLike> {r: 0xdd, g: 0x0a, b: 0xaf, a: 0xdd};
+    let c1 = <Like> {r: 0xdd, g: 0x0a, b: 0xaf, a: 0xdd};
 
     describe('#copy()', () => {
         it('creates a color that is equal to the copied color', () => {

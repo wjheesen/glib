@@ -1,11 +1,11 @@
 import { expect } from 'chai';
-import { containsPoint, copy, equals, LineSegmentLike } from './line-segment';
+import { containsPoint, copy, equals, Like } from './line-segment';
 import { midpoint } from './point';
 import { add } from './vec2';
 
 describe('line-segment', () => {
 
-    let l1 = <LineSegmentLike> {p1: {x: 1, y: 2}, p2: {x: 3, y: 4}};
+    let l1 = <Like> {p1: {x: 1, y: 2}, p2: {x: 3, y: 4}};
 
     describe('#copy()', () => {
         it('creates a line segment that is equal to the copied line segment', () => {
