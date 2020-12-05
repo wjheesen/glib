@@ -12,3 +12,7 @@ export * from './buffer/mat2d-buffer';
 export * from './buffer/typed-array';
 export * from './buffer/vec2-buffer';
 export * from './tool/stroke';
+export * from './drawable/graphic';
+export * from './drawable/mesh';
+export * from './drawable/shape';
+export * from './drawable/polygon-mesh';

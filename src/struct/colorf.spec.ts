@@ -27,7 +27,6 @@ describe('colorf', () => {
     describe('#toColor()', () => {
         it('preserves opacity', () => {
             let blue = fromColor(fromRgbInt(0xff));
-            console.log(blue, toColor(blue));
             expect(isOpaqueColor(toColor(blue))).to.be.true;
         })
     })
