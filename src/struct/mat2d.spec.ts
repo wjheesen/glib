@@ -3,7 +3,7 @@ import { Point } from '..';
 import { concat, conjugate, identity, invert, rotate, stretch, translate, Like, determinant, mapPoint, pivot, scale, mapRect, equals, sinCos, rectToRect, ScaleToFit, scaleToPoint, stretchRotateToPoint, copy} from './mat2d';
 import { dimensions, area, width, height, center, bottomRight, contains, topLeft } from './rect';
 
-describe('mat2d', () => {
+describe('Mat2d', () => {
 
     let m = <Like> {
         c1r1: 1, c2r1: 2, c3r1: 3,

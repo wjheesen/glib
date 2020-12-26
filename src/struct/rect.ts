@@ -48,6 +48,10 @@ export function height(r: Like) {
     return r.top - r.bottom;
 }
 
+export function aspect(r: Like) {
+    return width(r) / height(r);
+}
+
 /** Measures the area of a rect */
 export function area(r: Like) {
     return width(r) * height(r);

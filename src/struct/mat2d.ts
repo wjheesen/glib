@@ -187,8 +187,9 @@ export function mapPoint(m: Like, {x, y}: Point.Like, out = <Point.Like> {}) {
 /** Maps a rect by the specified matrix */
 export function mapRect(m: Like, r: Rect.Like, out = <Rect.Like> {}) {
     let {x, y} = mapPoint(m, Rect.topLeft(r)); 
+    let corners = [Rect.bottomLeft(r), Rect.bottomRight(r), Rect.topRight(r)];
     Rect.dimensions(x, y, 0, 0, out);
-    for (let corner of [Rect.bottomLeft(r), Rect.bottomRight(r), Rect.topRight(r)]) {
+    for (let corner of corners) {
         Rect.unionPoint(out, mapPoint(m, corner), out);
     }
     return out;

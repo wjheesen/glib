@@ -1,5 +1,5 @@
 import { expect } from 'chai';
-import { area, bottomLeft, bottomRight, center, centerX, centerY, contains, containsPoint, dimensions, empty, height, inset, offset, intersect, intersects, isEmpty, isValid, topLeft, topRight, union, unionPoint, width, sort, equals, copy, offsetX, offsetY } from './rect';
+import { area, bottomLeft, bottomRight, center, centerX, centerY, contains, containsPoint, dimensions, empty, height, inset, offset, intersect, intersects, isEmpty, isValid, topLeft, topRight, union, unionPoint, width, sort, equals, copy, offsetX, offsetY, aspect } from './rect';
 
 describe('rect', () => {
 
@@ -42,6 +42,12 @@ describe('rect', () => {
     describe('#height()', () => {
         it('correctly measures the height of a rect', function() {
             expect(height(r1)).to.equal(4);
+        })
+    })
+
+    describe('#aspect()', () => {
+        it('correctly measures the width-to-height aspect of a rect', function() {
+            expect(aspect(r1)).to.equal(0.75);
         })
     })
 
