@@ -1,8 +1,8 @@
-import { Graphic, Mesh, Mat2d, Rect, Point, LineSegment, Vec2 } from "..";
+import { Model, Mesh, Mat2d, Rect, Point, LineSegment, Vec2 } from "..";
 
 /** Shape defined by matrix transformation of a mesh. */
-export class Shape extends Graphic {
-
+export class PolygonModel extends Model {
+    
     /**
      * Creates a shape with the specified mesh data and initial transformation matrix.
      * @param mesh the static vertex and index data data for this shape.
@@ -15,25 +15,25 @@ export class Shape extends Graphic {
 
     get bounds(): Rect.Like {
         let { vertices } = this.mesh;
-        let { x, y } = this.convertPointToWorldSpace(vertices.at(0));
+        let { x, y } = this.mapPointToWorldSpace(vertices.at(0));
         let bounds = Rect.dimensions(x, y, 0, 0);
         for (let i = 1; i < vertices.length; i++) {
-            Rect.unionPoint(bounds, this.convertPointToWorldSpace(vertices.at(i)), bounds);
+            Rect.unionPoint(bounds, this.mapPointToWorldSpace(vertices.at(i)), bounds);
         }
         return bounds;
     }
 
-    set bounds(bounds: Rect.Like) {
-        this.scaleToFit(bounds);
+    set bounds(dst: Rect.Like) { // Preserves orientation
+        this.transform(Mat2d.rectToRect(this.bounds, dst));
     }
 
     /** Get the position of the vertex at the specified index */
     vertexAt(index: number, out = <Vec2.Like> {}) {
-        return this.convertPointToWorldSpace(this.mesh.vertices.at(index), out);
+        return this.mapPointToWorldSpace(this.mesh.vertices.at(index), out);
     }
 
     containsPoint(p: Point.Like): boolean {
-        return this.mesh.containsPoint(this.convertPointToModelSpace(p));
+        return this.mesh.containsPoint(this.mapPointToModelSpace(p));
     }
 
     /** Scales this shape to fit inside the destination rect using the specified scale to fit option */

@@ -1,6 +1,9 @@
 import { Color, StructBuffer } from '..';
+import { TypedArray } from './typed-array';
 
-export class ColorBuffer extends StructBuffer<Uint8Array, Color.Like> implements Color.Like {
+export type ColorfBuffer = ColorBuffer<Float32Array>;
+
+export class ColorBuffer<T extends TypedArray> extends StructBuffer<T, Color.Like> implements Color.Like {
 
     get componentLength() {
         return 4;
@@ -38,7 +41,7 @@ export class ColorBuffer extends StructBuffer<Uint8Array, Color.Like> implements
         this.setComponent(3, value);
     }
 
-    protected newStruct(data: Uint8Array): Color.Like {
+    protected newStruct(data: T): Color.Like {
         return new ColorBuffer(data);
     }
 } 

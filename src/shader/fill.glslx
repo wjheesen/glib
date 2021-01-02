@@ -1,0 +1,16 @@
+precision mediump float;
+
+uniform mat4 projection; // Projection matrix (maps from world space to clip space)
+uniform vec4 color;      // Color of shape
+attribute mat2 model;    // Model matrix (maps from model space to world space)
+attribute vec2 offset;   // Third column of model matrix
+attribute vec2 position; // Position of current vertex in model space
+
+export void vertex(){
+    vec2 worldPosition = (model * position) + offset;
+    gl_Position = projection * vec4(worldPosition, 1.0, 1.0);
+}
+
+export void fragment(){
+    gl_FragColor = color;
+}

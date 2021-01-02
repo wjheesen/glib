@@ -113,16 +113,6 @@ export class Camera {
     }
 
     /**
-     * Sends a request to zoom out this camera by the desired scale factor.
-     * Note: the desired scale factor is automatically adjusted to keep the camera from viewing anything outside of the world area. 
-     * @param desired the desired scale factor.
-     * @returns the actual scale factor.
-     */
-    zoomOut(desiredScaleFactor: number){
-        return this.zoomIn(1/desiredScaleFactor);
-    }
-
-    /**
      * Sends a request to zoom this camera by the desired scale factor.
      * Note: the desired scale factor is automatically adjusted to keep the camera from viewing anything outside of the world area. 
      * @param desired the desired scale factor.

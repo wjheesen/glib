@@ -1,7 +1,7 @@
-import { Mat2d, Point, Rect, Vec2 } from "..";
+import { Drawable, Mat2d, Point, Rect, Vec2, Renderer } from "..";
 
 /** A graphic that can be transformed by altering its 2d model matrix. */
-export abstract class Graphic {
+export abstract class Model {
 
     constructor(
         /** 2d matrix that maps this graphic from model space to world space. */
@@ -29,12 +29,12 @@ export abstract class Graphic {
     abstract get bounds(): Rect.Like;
 
     /** Converts a point in this graphic's model space to a point in world space. */
-    convertPointToWorldSpace(modelPoint: Point.Like, out = <Point.Like> {}) {
+    mapPointToWorldSpace(modelPoint: Point.Like, out = <Point.Like> {}) {
         return Mat2d.mapPoint(this.matrix, modelPoint, out);
     }
 
     /** Converts a point in world space to a point in this graphic's model space. */
-    convertPointToModelSpace(worldPoint: Point.Like, out = <Point.Like> {}){
+    mapPointToModelSpace(worldPoint: Point.Like, out = <Point.Like> {}){
         return Mat2d.mapPoint(Mat2d.invert(this.matrix), worldPoint, out);
     }
 

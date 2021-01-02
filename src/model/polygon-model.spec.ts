@@ -1,17 +1,17 @@
 import { expect } from 'chai';
-import { PolygonMesh, Point, Rect, Vec2, Shape, Mat2d, LineSegment } from '..';
+import { PolygonMesh, Point, Rect, Vec2, PolygonModel, Mat2d, LineSegment } from '..';
 
-describe('Shape', () => {
+describe('PolygonModel', () => {
 
-    let star = new Shape(PolygonMesh.star(5, 0.6));
+    let star = new PolygonModel(PolygonMesh.star(5, 0.6));
 
     describe('bounds', () => {
         it('initially matches the bounds of the underlying mesh', () => {
             expect(star.bounds).deep.equals(star.mesh.bounds);
         })
-        it('can be used to place a shape inside a rect', () => {
+        it('can be used to place a polygon inside a rect', () => {
             let dst = Rect.dimensions(0, 0, 6, 12);
-            star.scaleToFit(dst);
+            star.bounds = dst;
             expect(star.bounds).deep.equals(dst);
         })
     })
@@ -21,26 +21,26 @@ describe('Shape', () => {
             Mat2d.identity(star.matrix); // reset
             expect(star.center).deep.equals({x: 0, y: 0});
         })
-        it('can be used to move the shape to a new center point', () => {
+        it('can be used to move the polygon to a new center point', () => {
             star.center = {x: 3, y: 12};
             expect(star.bounds).deep.equals(Rect.offset(star.mesh.bounds, star.center));
         })
     })
 
-    describe('#convertPointToWorldSpace()', () => {
-        it('maps a point inside the mesh to a point inside the shape', () => {
-            expect(star.convertPointToWorldSpace({x: 0, y: 0})).deep.equals(star.center);
+    describe('#mapPointToWorldSpace()', () => {
+        it('maps a point inside the mesh to a point inside the polygon', () => {
+            expect(star.mapPointToWorldSpace({x: 0, y: 0})).deep.equals(star.center);
         });
     });
 
-    describe('#convertPointToModelSpace()', () => {
-        it('maps a point inside the shape to a point inside the mesh', () => {
-            expect(Point.equals(star.convertPointToModelSpace(star.center), {x: 0, y: 0}, 0.0001)).to.be.true;
+    describe('#mapPointToModelSpace()', () => {
+        it('maps a point inside the polygon to a point inside the mesh', () => {
+            expect(Point.equals(star.mapPointToModelSpace(star.center), {x: 0, y: 0}, 0.0001)).to.be.true;
         })
     });
 
     describe('#containsPoint()', () => {
-        it('accounts for any transformations applied to the shape', () => {
+        it('accounts for any transformations applied to the polygon', () => {
             star.center = {x: 9, y: 15};
             expect(star.containsPoint(star.center)).to.be.true;
             expect(star.containsPoint({x: 0, y: 0})).to.be.false;
@@ -48,7 +48,7 @@ describe('Shape', () => {
     })
 
     describe('#translate()', () => {
-        it('translates the shape by the specified vector', () => {
+        it('translates the polygon by the specified vector', () => {
             let v: Vec2.Like = {x: -12, y: 23};
             let tc = Vec2.add(v, star.center);
             star.translate(v);
@@ -57,7 +57,7 @@ describe('Shape', () => {
     });
 
     describe('#scale()', () => {
-        it('scales the shape out from the center', () => {
+        it('scales the polygon out from the center', () => {
             let {center, bounds} = star;
             let w = Rect.width(bounds);
             let h = Rect.height(bounds);
@@ -71,7 +71,7 @@ describe('Shape', () => {
     });
 
     describe('#stretch()', () => {
-        it('stretches the shape out from the center, preserving aspect', () => {
+        it('stretches the polygon out from the center, preserving aspect', () => {
             let {center, bounds} = star;
             let aspect = Rect.width(bounds) / Rect.height(bounds)
 
@@ -86,7 +86,7 @@ describe('Shape', () => {
     });
 
     describe('#rotate()', () => {
-        it('rotates the shape around its center point', () => {
+        it('rotates the polygon around its center point', () => {
             let c = star.center;
             let v0 = star.vertexAt(0);
             let angle = Math.PI / 4;
@@ -99,7 +99,7 @@ describe('Shape', () => {
     })
 
     describe('#scaleToFit()', () => {
-        it('scales the shape to fit inside the specified rect', () => {
+        it('scales the polygon to fit inside the specified rect', () => {
             let dst = Rect.dimensions(0, 0, 12, 14);
             star.scaleToFit(dst);
             expect(star.bounds).deep.equals(dst);
@@ -107,7 +107,7 @@ describe('Shape', () => {
     })
 
     describe('#stretchAcrossLine()', () => {
-        let hex = new Shape(PolygonMesh.regularPolygon(6));
+        let hex = new PolygonModel(PolygonMesh.regularPolygon(6));
         let aspect = getAspect();
         let line: LineSegment.Like = {p1: {x: 3, y: 12}, p2: {x: 15, y: -6}};
         hex.stretchAcross(line);

@@ -1,0 +1,72 @@
+precision mediump float;
+
+uniform mat4 projection;       // Projection matrix (maps from world space to clip space)
+uniform vec4 fillColor;        // Fill color for ellipse
+uniform vec4 strokeColor;      // Stroke color for ellipse
+uniform float lineWidth;       // Width of lines making up stroke
+
+attribute mat2 model;          // Instanced model matrix (maps from model space to world space)
+attribute vec2 offset;         // Instanced model offset
+attribute vec2 position;       // Position of model vertex: one of (-1, 1), (-1, -1), (1, -1), (1, 1)
+
+varying vec2 fillPosition;     // Position of pixel relative to boundaries of ellipse in NDC space
+varying vec2 strokePosition;   // Position of pixel relative to boundaries of stroked ellipse in NDC space
+
+/**
+ * Creates a mat2 set to rotate by the specified angle (in radians), with a pivot point at the origin.
+ */
+mat2 rot2(float radians){
+    float sin = sin(radians);
+    float cos = cos(radians);
+    return mat2(cos,sin,-sin,cos);
+}
+
+export void vertex(){
+
+    // Perform singular value decomposition on model matrix
+    // For more information, see Pedro Gimeno's answer on https://scicomp.stackexchange.com/questions/8899/robust-algorithm-for-2x2-svd
+    float a = model[0][0];
+    float b = model[1][0];
+    float c = model[0][1];
+    float d = model[1][1];
+
+    float e = (a + d) / 2.0;
+    float f = (a - d) / 2.0;
+    float g = (c + b) / 2.0;
+    float h = (c - b) / 2.0;
+
+    float q = sqrt(e*e + h*h);
+    float r = sqrt(f*f + g*g);
+
+    float sx = q + r; 
+    float sy = q - r;
+
+    float a1 = atan(g,f);
+    float a2 = atan(h,e);
+
+    float theta = (a2 - a1) / 2.0;
+    float phi = (a2 + a1) / 2.0;
+
+    mat2 u = rot2(phi);
+    mat2 v = rot2(theta);
+
+    u[1] *= sign(sy);
+    sy = abs(sy);
+
+    // Map model vertex and add stroke offset to get world position
+    vec2 strokeOffset =  u * (lineWidth * (v * position));
+    vec2 worldPosition = (model * position) + offset + strokeOffset;
+
+    // Project onto clip space
+    gl_Position = projection * vec4(worldPosition, 1.0, 1.0);
+
+    // Meausure fill position and stroke position for use in fragment shader
+    strokePosition = v * position;
+    fillPosition = strokePosition * (1.0 + (lineWidth/vec2(sx,sy)));
+}
+
+export void fragment(){
+    bool isFillPixel = dot(fillPosition, fillPosition) < 1.0;
+    bool isStrokePixel = dot(strokePosition, strokePosition) < 1.0;
+    gl_FragColor = isFillPixel ? fillColor : isStrokePixel ? strokeColor : vec4(0.0);
+}

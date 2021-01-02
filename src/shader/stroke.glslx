@@ -1,0 +1,58 @@
+precision mediump float;
+
+uniform mat4 projection;         // Projection matrix (maps from world space to clip space)
+uniform vec4 color;              // Color of outline
+uniform float lineWidth;         // Width of lines making up outline
+attribute mat2 model;            // Model matrix (maps from model space to world space)
+attribute vec2 offset;           // Third column of model matrix
+attribute vec2 position;         // Position of current vertex in model space
+attribute vec2 miter;            // The miter to apply to this vertex
+
+/**
+ * Creates a mat2 set to rotate by the specified angle (in radians), with a pivot point at the origin.
+ */
+mat2 rotation(float radians){
+    float sin = sin(radians);
+    float cos = cos(radians);
+    return mat2(cos,sin,-sin,cos);
+}
+
+export void vertex(){
+
+    // Apply SVD to model matrix to get left and right rotation matrices u and v
+    // For more information, see Pedro Gimeno's answer on https://scicomp.stackexchange.com/questions/8899/robust-algorithm-for-2x2-svd
+    float a = model[0][0];
+    float b = model[1][0];
+    float c = model[0][1];
+    float d = model[1][1];
+
+    float e = a + d;
+    float f = a - d;
+    float g = c + b;
+    float h = c - b;
+
+    float a1 = atan(g,f);
+    float a2 = atan(h,e);
+
+    float theta = (a2 - a1) / 2.0;
+    float phi = (a2 + a1) / 2.0;
+
+    mat2 u = rotation(phi);
+    mat2 v = rotation(theta);
+
+    u[1] *= sign(a*d - b*c);
+
+    // Apply rotation matrices to miter, replacing the scale matrix with a stretch by the specified line width
+    vec2 rotatedMiter =  u * (lineWidth * (v * miter));
+
+    // Add miter to mapped position to get world position
+    vec2 worldPosition = (model * position) + offset + rotatedMiter;
+
+    // Project onto clip space
+    gl_Position = projection * vec4(worldPosition, 1.0, 1.0);
+}
+
+export void fragment(){
+    gl_FragColor = color;
+}
+

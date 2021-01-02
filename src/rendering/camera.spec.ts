@@ -33,17 +33,6 @@ describe('Camera', () => {
         })
     })
 
-    describe('#zoomOut()', () => {
-        it('causes the camera to focus on a larger area, respecting the min zoom constraint', () => {
-            let area = Rect.area(camera.view);
-            let pos = Vec2.copy(camera.position);
-            let actual = camera.zoomOut(22 * 22);
-            expect(Rect.area(camera.view)).approximately(area / (actual * actual), 0.0001);
-            expect(camera.minZoom).to.equal(camera.zoom);
-            expect(camera.position).deep.equals(pos);
-        })
-    })
-
     describe('#zoomToPoint()', () => {
         it('zooms the camera towards the specified point', () => {
             let area = Rect.area(camera.view);
