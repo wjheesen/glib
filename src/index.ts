@@ -4,7 +4,7 @@ export * as Ellipse from './struct/ellipse';
 export * as LineSegment from './struct/line-segment';
 export * as Mat2d from './struct/mat2d';
 export * as Point from './struct/point';
-export * as Rect from './struct/rect';
+export * from './struct/rect';
 export * as Vec2 from './struct/vec2';
 export * as Mat4 from './struct/mat4';
 export * from './buffer/struct-buffer';

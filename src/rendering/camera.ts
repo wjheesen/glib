@@ -10,14 +10,14 @@ export class Camera {
     public readonly view = Rect.copy(this.world);
 
     /** The current position of the camera in relation to the center of the world. */
-    public readonly position = Rect.center(this.world);
+    public readonly position = this.world.center();
 
     /** The current zoom setting for this camera. */
     public zoom = 1;
 
     constructor(
         /** The area that can be viewed by this camera */
-        public readonly world: Rect.Like,
+        public readonly world: Rect,
         /** The min-allowed zoom setting for this camera. */
         public readonly minZoom: number,
         /** The max-allowed zoom setting for this camera. */
@@ -32,7 +32,7 @@ export class Camera {
      */
     setViewport(vw: number, vh: number) {
         // Compute width to height ratio of viewport and world
-        let vr = vw / vh, wr = Rect.aspect(this.world);
+        let vr = vw / vh, wr = this.world.aspect;
         // Scale width or height of view to match aspect of viewport
         let m = Mat2d.scale(wr < vr ? {x: vr / wr, y: 1} : {x: 1, y: wr / vr});
         // Apply our other camera settings on top
@@ -53,7 +53,7 @@ export class Camera {
         let target = Vec2.add(desiredOffset, this.position);
         let ratio = (this.zoom - this.minZoom) / this.zoom;
         let size = Mat2d.mapRect(Mat2d.stretch(ratio), this.world); // Max allowable size given zoom
-        let far = Rect.offset(size, Vec2.rotate180(Rect.center(size))); // Center at origin so we know how far we can go in any direction
+        let far = Rect.copy(size); far.offset(Vec2.rotate180(size.center())); // Center at origin so we know how far we can go in any direction
 
         let actualOffset = Vec2.copy(desiredOffset);
         // If world position is too far left
@@ -78,7 +78,7 @@ export class Camera {
         }
 
         // Now we can safely apply the offset
-        Rect.offset(this.view, actualOffset, this.view);
+        this.view.offset(actualOffset);
         Vec2.add(this.position, actualOffset, this.position);
         this.updateMatrix();
         return actualOffset;
@@ -122,14 +122,14 @@ export class Camera {
     zoomToPoint(desiredScaleFactor: number, focus: Point.Like) {
         let view = this.view
         // Convert (x,y) coordinates to [0,1] space
-        let normX = (focus.x - view.left) / Rect.width(view);
-        let normY = (focus.y - view.bottom) / Rect.height(view);
+        let normX = (focus.x - view.left) / view.width;
+        let normY = (focus.y - view.bottom) / view.height;
         // Apply scale factor
         let actualScaleFactor = this.zoomIn(desiredScaleFactor);
         // Determine position of focus point after change in zoom
         let aft: Vec2.Like = {
-            x: view.left + (normX * Rect.width(view)),
-            y: view.bottom + (normY * Rect.height(view))
+            x: view.left + (normX * view.width),
+            y: view.bottom + (normY * view.height)
         }
         // Compute offset back to focus point
         let offset = Vec2.fromPointToPoint(aft, focus);

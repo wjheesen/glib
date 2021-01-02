@@ -1,7 +1,6 @@
 import { expect } from 'chai';
-import { Point, Vec2 } from '..';
+import { Point, Vec2, Rect } from '..';
 import { circle, containsPoint, copy, equals, fromRect } from './ellipse';
-import { center, dimensions, height, width } from './rect';
 
 describe('ellipse', () => {
 
@@ -27,11 +26,11 @@ describe('ellipse', () => {
 
     describe('#fromRect()', () => {
         it('has the same width, height, and center point as the rect', () => {
-            let r = dimensions(1, 2, 3, 4);
+            let r = Rect.dimensions(1, 2, 3, 4);
             let e = fromRect(r);
-            expect(e.rx).equals(width(r) / 2);
-            expect(e.ry).equals(height(r) / 2);
-            expect(Point.equals(e.c, center(r))).to.be.true;
+            expect(e.rx).equals(r.width / 2);
+            expect(e.ry).equals(r.height / 2);
+            expect(Point.equals(e.c, r.center())).to.be.true;
         })
     })
 

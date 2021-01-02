@@ -1,5 +1,5 @@
 import { expect } from 'chai';
-import { containsPoint, dimensions } from './rect';
+import { Rect } from '..';
 import { add, bound, boundX, copy, cross, divide, dot, equals, fromPointToPoint, length, length2, multiply, normalize, rotate180, rotate270, rotate90, subtract } from './vec2';
 
 describe('vec2', () => {
@@ -93,23 +93,23 @@ describe('vec2', () => {
 
     describe('#bound()', () => {
         let p = {x: 0, y: 0};
-        let b = dimensions(0, 2, 2, 2);
+        let b = Rect.dimensions(0, 2, 2, 2);
         it('does nothing if the translation vector would not cause the point to go out of bounds', () => {
-            expect(containsPoint(b, add(v1, p))).to.be.true;
+            expect(b.containsPoint(add(v1, p))).to.be.true;
             expect(bound(v1, p, b)).deep.equals(v1);
         })
 
         it('shortens the translation vector to prevent the point from going out of bounds', () => {
             let vb = bound(v2, p, b);
-            expect(containsPoint(b, add(v2, p))).to.be.false;
-            expect(containsPoint(b, add(vb, p))).to.be.true;
+            expect(b.containsPoint(add(v2, p))).to.be.false;
+            expect(b.containsPoint(add(vb, p))).to.be.true;
             expect(length2(vb)).lessThan(length2(v2));
         })
     });
 
     describe('#boundX()', () => {
         let x = 0;
-        let b = dimensions(0, 2, 2, 2);
+        let b = Rect.dimensions(0, 2, 2, 2);
         it('does nothing if the change in x would not cause the point to go out of bounds', () => {
             let dx = 1;
             expect(boundX(dx, x, b)).deep.equals(dx);
@@ -126,7 +126,7 @@ describe('vec2', () => {
 
     describe('#boundX()', () => {
         let y = 0;
-        let b = dimensions(0, 2, 2, 2);
+        let b = Rect.dimensions(0, 2, 2, 2);
         it('does nothing if the change in y would not cause the point to go out of bounds', () => {
             let dy = 1;
             expect(boundX(dy, y, b)).deep.equals(dy);

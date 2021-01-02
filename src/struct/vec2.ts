@@ -95,24 +95,24 @@ export function fromPointToPoint(p1: Point.Like, p2: Point.Like, out = <Like> {}
 }
 
 /** Bounds a translation vector to prevent it from mapping point p outside of bounds r */
-export function bound(v: Like, p: Point.Like, b: Rect.Like, out = <Like> {}) {
+export function bound(v: Like, p: Point.Like, b: Rect, out = <Like> {}) {
     out.x = boundX(v.x, p.x, b);
     out.y = boundY(v.y, p.y, b);
     return out;
 }
 
 /** Bounds the x-component of a translation vector to prevent it from mapping the x-coordinate of a point outside of bounds b */
-export function boundX(dx: number, x: number, b: Rect.Like) {
+export function boundX(dx: number, x: number, b: Rect) {
     let targetX = dx + x;
     let side = dx < 0 ? b.left : b.right;
-    return Rect.containsX(b, targetX) ? dx : side - x;
+    return b.containsX(targetX) ? dx : side - x;
 }
 
 /** Bounds the y-component of a translation vector to prevent it from mapping the y-coordinate of a point outside of bounds b */
-export function boundY(dy: number, y: number, b: Rect.Like) {
+export function boundY(dy: number, y: number, b: Rect) {
     let targetY = dy + y;
     let side = dy < 0 ? b.bottom : b.top;
-    return Rect.containsX(b, targetY) ? dy : side - y;
+    return b.containsY(targetY) ? dy : side - y;
 }
 
 /**

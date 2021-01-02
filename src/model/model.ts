@@ -26,7 +26,7 @@ export abstract class Model {
     }
 
     /** Measures the boundaries of this graphic in world space. */
-    abstract get bounds(): Rect.Like;
+    abstract get bounds(): Rect;
 
     /** Converts a point in this graphic's model space to a point in world space. */
     mapPointToWorldSpace(modelPoint: Point.Like, out = <Point.Like> {}) {

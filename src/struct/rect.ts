@@ -1,6 +1,6 @@
 import { Point, Vec2 } from "..";
 
-export interface Like {
+export interface RectLike {
     /** The left boundary of this Rect */
     left: number;
     /** The top boundary of this Rect */
@@ -10,204 +10,203 @@ export interface Like {
     /** The bottom boundary of this Rect */
     bottom: number;
 }
+export class Rect implements RectLike {
 
-/** Copies a rect */
-export function copy(r: Like, out = <Like> {}) {
-    out.left = r.left;
-    out.top = r.top;
-    out.right = r.right;
-    out.bottom = r.bottom;
-    return out;
-}
+    static copy(r: RectLike) {
+        return new Rect(r.left, r.top, r.right, r.bottom);
+    }
 
-/** Creates an empty rect */
-export function empty(out = <Like> {}) {
-    out.left = 0;
-    out.top = 0;
-    out.right = 0;
-    out.bottom = 0;
-    return out;
-}
+    /** Creates an empty rect */
+    static empty() {
+        return new Rect(0, 0, 0, 0);
+    }
 
-/** Creates a rect with the specified dimensions */
-export function dimensions(left: number, top: number, width: number, height: number, out = <Like> {}) {
-    out.left = left;
-    out.top = top;
-    out.right = left + width;
-    out.bottom = top - height;
-    return out;
-}
+    /** Creates this rect with the specified dimensions */
+    static dimensions(left: number, top: number, width: number, height: number) {
+        return new Rect(left, top, left + width, top - height);
+    }
 
- /** Measures the width of a rect */
-export function width(r: Like) {
-    return r.right - r.left;
-}
+    constructor(
+        public left: number,
+        public top: number,
+        public right: number,
+        public bottom: number
+    ) {}
 
-/** Measures the height of a rect */
-export function height(r: Like) {
-    return r.top - r.bottom;
-}
+    /** Measures the width of this rect */
+    get width() {
+        return this.right - this.left;
+    }
 
-export function aspect(r: Like) {
-    return width(r) / height(r);
-}
+    set width(w: number) {
+        this.right = this.left + w;
+    }
 
-/** Measures the area of a rect */
-export function area(r: Like) {
-    return width(r) * height(r);
-}
+    /** Measures the height of this rect */
+    get height() {
+        return this.top - this.bottom;
+    }
 
-/** Measures the point at the center of a rect */
-export function center(r: Like, out = <Point.Like> {}) {
-    out.x = centerX(r);
-    out.y = centerY(r);
-    return out;
-}
+    set height(h: number) {
+        this.bottom = this.top - h;
+    }
 
-/** Measures the x-coordinate of the point at the center of a rect */
-export function centerX(r: Like) {
-    return 0.5 * (r.left + r.right);
-}
+    get aspect() {
+        return this.width / this.height;
+    }
 
-/** Measures the y-coordinate of the point at the center of a rect */
-export function centerY(r: Like) {
-    return 0.5 * (r.bottom + r.top);
-}
+    /** Measures the area of this rect */
+    get area() {
+        return this.width * this.height;
+    }
 
-/** Gets the point at the top left corner of a rect */
-export function topLeft(r: Like, out = <Point.Like> {}) {
-    out.x = r.left;
-    out.y = r.top;
-    return out;
-}
+    /** Gets the point at the center of this rect */
+    center(out = <Point.Like> {}) {
+        out.x = this.centerX;
+        out.y = this.centerY;
+        return out;
+    }
 
-/** Gets the point at the bottom left corner of a rect */
-export function bottomLeft(r: Like, out = <Point.Like> {}) {
-    out.x = r.left;
-    out.y = r.bottom;
-    return out;
-}
+    /** Measures the x-coordinate of the point at the center of this rect */
+    get centerX() {
+        return 0.5 * (this.left + this.right);
+    }
 
-/** Gets the point at the bottom right corner of a rect */
-export function bottomRight(r: Like, out = <Point.Like> {}) {
-    out.x = r.right;
-    out.y = r.bottom;
-    return out;
-}
+    /** Measures the y-coordinate of the point at the center of this rect */
+    get centerY() {
+        return 0.5 * (this.bottom + this.top);
+    }
 
-/** Gets the point at the top right corner of a rect */
-export function topRight(r: Like, out = <Point.Like> {}) {
-    out.x = r.right;
-    out.y = r.top;
-    return out;
-}
+    /** Gets the point at the top left corner of this rect */
+    topLeft(out = <Point.Like> {}) {
+        out.x = this.left;
+        out.y = this.top;
+        return out;
+    }
 
-/** Checks if a rect is empty. True if left >= right or bottom >= top. */
-export function isEmpty(r: Like) {
-    return r.left >= r.right || r.bottom >= r.top;
-}
+    /** Gets the point at the bottom left corner of this rect */
+    bottomLeft(out = <Point.Like> {}) {
+        out.x = this.left;
+        out.y = this.bottom;
+        return out;
+    }
 
-/** Checks if the boundaries of this Rect represent a valid rectangle. True if right >= left and top >= bottom. */
-export function isValid(r: Like) {
-    return r.right >= r.left && r.top >= r.bottom;
-}
+    /** Gets the point at the bottom right corner of this rect */
+    bottomRight(out = <Point.Like> {}) {
+        out.x = this.right;
+        out.y = this.bottom;
+        return out;
+    }
 
-/** Finds the union of two rectangles */
-export function union(r1: Like, r2: Like, out = <Like> {}) {
-    out.left = Math.min(r1.left, r2.left);
-    out.right = Math.max(r1.right, r2.right);
-    out.bottom = Math.min(r1.bottom, r2.bottom);
-    out.top = Math.max(r1.top, r2.top);
-    return out;
-}
+    /** Gets the point at the top right corner of this rect */
+    topRight(out = <Point.Like> {}) {
+        out.x = this.right;
+        out.y = this.top;
+        return out;
+    }
 
-/** Expands a rect to enclose the specified point */
-export function unionPoint(r: Like, {x, y}: Point.Like, out = <Like> {}) {
-    out.left = Math.min(x, r.left);
-    out.top = Math.max(y, r.top);
-    out.right = Math.max(x, r.right);
-    out.bottom = Math.min(y, r.bottom);
-    return out;
-}
+    /** Checks if this rect is empty. True if left >= right or bottom >= top. */
+    isEmpty() {
+        return this.left >= this.right || this.bottom >= this.top;
+    }
 
-/** Checks if two rectangles intersect */
-export function intersects(r1: Like, r2: Like) {
-    return r1.right >= r2.left && r2.right >= r1.left && r1.top >= r2.bottom && r2.top >= r1.bottom;
-}
+    /** Checks if the boundaries of this Rect represent a valid rectangle. True if right >= left and top >= bottom. */
+    isValid() {
+        return this.right >= this.left && this.top >= this.bottom;
+    }
 
-/** Finds the intersection of 2 rectangles */
-export function intersect(r1: Like, r2: Like, out = <Like> {}) {
-    out.left = Math.max(r1.left, r2.left);
-    out.right = Math.min(r1.right, r2.right);
-    out.bottom = Math.max(r1.bottom, r2.bottom);
-    out.top = Math.min(r1.top, r2.top);
-    return out;
-}
+    /** Expands this rect to include the other rect */
+    union(r: RectLike) {
+        this.left = Math.min(this.left, r.left);
+        this.right = Math.max(this.right, r.right);
+        this.bottom = Math.min(this.bottom, r.bottom);
+        this.top = Math.max(this.top, r.top);
+    }
 
-/** Insets the boundaries of a rect by the specified vector. */
-export function inset(r: Like, {x, y}: Vec2.Like, out = <Like> {}) {
-    out.left = r.left + x;
-    out.top = r.top - y;
-    out.right = r.right - x;
-    out.bottom = r.bottom + y;
-    return out;
-}
+    /** Expands this rect to enclose the specified point */
+    unionPoint({x, y}: Point.Like) {
+        this.left = Math.min(x, this.left);
+        this.top = Math.max(y, this.top);
+        this.right = Math.max(x, this.right);
+        this.bottom = Math.min(y, this.bottom);
+    }
 
-/** Offsets the position of a rect by the specified vector */
-export function offset(r: Like, {x, y}: Vec2.Like, out = <Like> {}) {
-    out.left = r.left + x;
-    out.top = r.top + y;
-    out.right = r.right + x;
-    out.bottom = r.bottom + y;
-    return out;
-}
+    /** Checks if this rect intersects the other rect */
+    intersects(r: RectLike) {
+        return this.right >= r.left && r.right >= this.left && this.top >= r.bottom && r.top >= this.bottom;
+    }
 
-/** Offsets the position of a rect by the specified change in x (dx) */
-export function offsetX(r: Like, dx: number, out = <Like> {}) {
-    return offset(r, {x: dx, y: 0}, out);
-}
+    /** Finds the intersection of this rect with the other rect */
+    intersect(r: RectLike) {
+        this.left = Math.max(this.left, r.left);
+        this.right = Math.min(this.right, r.right);
+        this.bottom = Math.max(this.bottom, r.bottom);
+        this.top = Math.min(this.top, r.top);
+    }
 
-/** Offsets the position of a rect by the specified change in y (dy) */
-export function offsetY(r: Like, dy: number, out = <Like> {}) {
-    return offset(r, {x: 0, y: dy}, out);
-}
+    /** Insets the boundaries of this rect by the specified vector. */
+    inset({x, y}: Vec2.Like) {
+        this.left += x;
+        this.top -= y;
+        this.right -= x;
+        this.bottom += y;
+    }
 
-/** Checks if r1 contains r2 */
-export function contains(r1: Like, r2: Like) {
-    return r1.left <= r2.left && r2.right <= r1.right &&
-        r1.bottom <= r2.bottom && r2.top <= r1.top;
-}
+    /** Offsets the position of this rect by the specified vector */
+    offset({x, y}: Vec2.Like) {
+        this.offsetX(x);
+        this.offsetY(y);
+    }
 
-/** Checks if a rect contains the specified point */
-export function containsPoint(r: Like, {x, y}: Point.Like) {
-    return containsX(r, x) && containsY(r, y);
-}
+    /** Offsets the position of this rect by the specified change in x (dx) */
+    offsetX(dx: number) {
+        this.left += dx;
+        this.right += dx;
+    }
 
-/** Checks if a rect contains any point with the specified x coordinate  */
-export function containsX(r: Like, x: number) {
-    return r.left <= x && x <= r.right;
-}
+    /** Offsets the position of this rect by the specified change in y (dy) */
+    offsetY(dy: number) {
+        this.top += dy;
+        this.bottom += dy;
+    }
 
-/** Checks if a rect contains any point with the specified y coordinate  */
-export function containsY(r: Like, y: number) {
-    return r.bottom <= y && y <= r.top;
-}
+    /** Checks if this rect contains the other rect */
+    contains(r: RectLike) {
+        return this.left <= r.left && r.right <= this.right &&
+            this.bottom <= r.bottom && r.top <= this.top;
+    }
 
-/** Swaps the top/bottom or left/right boundaries of a rect if they are flipped, meaning left > right and/or top > bottom */
-export function sort({top, left, bottom, right}: Like, out = <Like> {}) {
-    let vFlipped = bottom > top;
-    let hFlipped = left > right;
-    out.top = vFlipped ? bottom : top;
-    out.left = hFlipped ? right : left;
-    out.bottom = vFlipped ? top : bottom;
-    out.right = hFlipped ? left : right;
-    return out;
-}
+    /** Checks if this rect contains the specified point */
+    containsPoint({x, y}: Point.Like) {
+        return this.containsX(x) && this.containsY(y);
+    }
 
-/** Checks if r1 and r2 are approximately equal */
-export function equals(r1: Like, r2: Like, e = 0) {
-    return Math.abs(r1.left - r2.left) <= e
-        && Math.abs(r1.top - r2.top) <= e
-        && Math.abs(r1.right - r2.right) <= e
-        && Math.abs(r1.bottom - r2.bottom) <= e;
+    /** Checks if this rect contains any point with the specified x coordinate  */
+    containsX(x: number) {
+        return this.left <= x && x <= this.right;
+    }
+
+    /** Checks if this rect contains any point with the specified y coordinate  */
+    containsY(y: number) {
+        return this.bottom <= y && y <= this.top;
+    }
+
+    /** Swaps the top/bottom or left/right boundaries of this rect if they are flipped, meaning left > right and/or top > bottom */
+    sort() {
+        let {top, left, bottom, right} = this;
+        let vFlipped = bottom > top;
+        let hFlipped = left > right;
+        this.top = vFlipped ? bottom : top;
+        this.left = hFlipped ? right : left;
+        this.bottom = vFlipped ? top : bottom;
+        this.right = hFlipped ? left : right;
+    }
+
+    /** Checks if this rect is approximately equal to the other rect */
+    equals(r: RectLike, e = 0) {
+        return Math.abs(this.left - r.left) <= e
+            && Math.abs(this.top - r.top) <= e
+            && Math.abs(this.right - r.right) <= e
+            && Math.abs(this.bottom - r.bottom) <= e;
+    }
 }

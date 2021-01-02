@@ -147,7 +147,7 @@ export const enum ScaleToFit {
 };
 
 /** Creates a matrix to map src into dst using the specifed scale to fit option  */
-export function rectToRect(src: Rect.Like, dst: Rect.Like, stf = ScaleToFit.Fill, out = <Like> {}) {
+export function rectToRect(src: Rect, dst: Rect, stf = ScaleToFit.Fill, out = <Like> {}) {
     // Translate to origin
     let origin = {x: 0, y: 0};
     let srcPoint = getScaleToFitPoint(src, stf);
@@ -155,8 +155,8 @@ export function rectToRect(src: Rect.Like, dst: Rect.Like, stf = ScaleToFit.Fill
     translate(Vec2.fromPointToPoint(srcPoint, origin), out); 
 
     // Apply the scale
-    let sx = Rect.width(dst) / Rect.width(src);
-    let sy = Rect.height(dst) / Rect.height(src);
+    let sx = dst.width / src.width;
+    let sy = dst.height / src.height;
     let scaleMatrix = stf == ScaleToFit.Fill ? scale({x: sx, y: sy}) : stretch(Math.min(sx, sy));
     concat(scaleMatrix, out, out);
 
@@ -166,14 +166,14 @@ export function rectToRect(src: Rect.Like, dst: Rect.Like, stf = ScaleToFit.Fill
 }
 
 /** Determine which point to match based on the scale to fit option. */
-function getScaleToFitPoint(r: Rect.Like, stf: ScaleToFit): Point.Like {
+function getScaleToFitPoint(r: Rect, stf: ScaleToFit): Point.Like {
     switch (stf) {
         case ScaleToFit.Center:
-            return Rect.center(r);
+            return r.center();
         case ScaleToFit.End:
-            return {x: r.right, y: r.bottom};
+            return r.bottomRight();
         default:
-            return {x: r.left, y: r.top};
+            return r.topLeft();
     }
 }
 
@@ -185,12 +185,13 @@ export function mapPoint(m: Like, {x, y}: Point.Like, out = <Point.Like> {}) {
 }
 
 /** Maps a rect by the specified matrix */
-export function mapRect(m: Like, r: Rect.Like, out = <Rect.Like> {}) {
-    let {x, y} = mapPoint(m, Rect.topLeft(r)); 
-    let corners = [Rect.bottomLeft(r), Rect.bottomRight(r), Rect.topRight(r)];
-    Rect.dimensions(x, y, 0, 0, out);
+export function mapRect(m: Like, r: Rect, out = Rect.empty()) {
+    let {x, y} = mapPoint(m, r.topLeft()); 
+    let corners = [r.bottomLeft(), r.bottomRight(), r.topRight()];
+    out.left = out.right = x; 
+    out.top = out.bottom = y;
     for (let corner of corners) {
-        Rect.unionPoint(out, mapPoint(m, corner), out);
+        out.unionPoint(mapPoint(m, corner));
     }
     return out;
 }

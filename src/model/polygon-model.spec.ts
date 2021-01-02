@@ -23,7 +23,8 @@ describe('PolygonModel', () => {
         })
         it('can be used to move the polygon to a new center point', () => {
             star.center = {x: 3, y: 12};
-            expect(star.bounds).deep.equals(Rect.offset(star.mesh.bounds, star.center));
+            let expected = Rect.copy(star.mesh.bounds); expected.offset(star.center);
+            expect(star.bounds).deep.equals(expected);
         })
     })
 
@@ -59,28 +60,28 @@ describe('PolygonModel', () => {
     describe('#scale()', () => {
         it('scales the polygon out from the center', () => {
             let {center, bounds} = star;
-            let w = Rect.width(bounds);
-            let h = Rect.height(bounds);
+            let w = bounds.width;
+            let h = bounds.height;
 
             let v = {x: 2, y: 4};
             star.scale(v);
             expect(star.center).deep.equals(center);
-            expect(Rect.width(star.bounds)).to.equal(v.x * w);
-            expect(Rect.height(star.bounds)).to.equals(v.y * h);
+            expect(star.bounds.width).to.equal(v.x * w);
+            expect(star.bounds.height).to.equals(v.y * h);
         })
     });
 
     describe('#stretch()', () => {
         it('stretches the polygon out from the center, preserving aspect', () => {
             let {center, bounds} = star;
-            let aspect = Rect.width(bounds) / Rect.height(bounds)
+            let aspect = bounds.aspect;
 
             let r = 0.5;
             star.stretch(r);
             expect(star.center).deep.equals(center);
 
             let rbounds = star.bounds;
-            let raspect = Rect.width(rbounds) / Rect.height(rbounds);
+            let raspect = rbounds.aspect;
             expect(raspect).to.equal(aspect);
         })
     });

@@ -23,8 +23,8 @@ export function circle(r: number, c: Point.Like, out = <Like> {}) {
 }
 
 /** Creates an ellipse with the specified boundaries */
-export function fromRect(r: Rect.Like, out = <Like> {}) {
-    return copy({rx: Rect.width(r) / 2, ry: Rect.height(r) / 2, c: Rect.center(r)}, out);
+export function fromRect(r: Rect, out = <Like> {}) {
+    return copy({rx: r.width / 2, ry: r.height / 2, c: r.center()}, out);
 }
 
 /** Check if an ellipse contains the specified point */

@@ -77,8 +77,8 @@ describe('PolygonMesh', () => {
             for (let i = 0; i < miters.length; i++) {
                 Vec2.add(miters.at(i), rectangle.at(i), border.at(i));
             }
-            expect(Rect.contains(border.bounds, rectangle.bounds)).to.be.true;
-            expect(Rect.area(border.bounds)).to.be.greaterThan(Rect.area(rectangle.bounds));
+            expect(border.bounds.contains(rectangle.bounds)).to.be.true;
+            expect(border.bounds.area).to.be.greaterThan(rectangle.bounds.area);
         });
     });
 })

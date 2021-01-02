@@ -49,13 +49,13 @@ describe('Vec2Buffer', () => {
         it('should be empty if the buffer is empty', () => {
             let emptyBuffer = new Vec2Buffer(new Float32Array([]))
             let bounds = emptyBuffer.bounds;
-            expect(Rect.isEmpty(bounds)).to.be.true;
+            expect(bounds.isEmpty()).to.be.true;
         });
 
         it('contains all of the the points in the buffer', () => {
             let bounds = buffer.bounds;
             for (let i = 0; i < buffer.length; i++) {
-                expect(Rect.containsPoint(bounds, buffer.at(i)));
+                expect(bounds.containsPoint(buffer.at(i)));
             }
         });
 

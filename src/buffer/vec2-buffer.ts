@@ -27,7 +27,7 @@ export class Vec2Buffer extends StructBuffer<Float32Array, Vec2.Like> implements
         this.setComponent(1, value);
     }
 
-    get bounds(): Rect.Like
+    get bounds(): Rect
     {
         return this.length == 0 ? Rect.empty() : this.measureBounds(this.at(0));
     }
@@ -37,7 +37,7 @@ export class Vec2Buffer extends StructBuffer<Float32Array, Vec2.Like> implements
     {
         let bounds = Rect.dimensions(p0.x, p0.y, 0, 0);
         for (let i = 1; i < this.length; i++) {
-            Rect.unionPoint(bounds, this.at(i), bounds);
+            bounds.unionPoint(this.at(i));
         }
         return bounds;
     }

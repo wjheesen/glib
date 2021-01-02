@@ -6,9 +6,9 @@ import { Rect } from '..';
  * @param near the depth (negative z coordinate) of the near clipping plane.
  * @param far the depth (negative z coordinate) of the far clipping plane.
  */
-export function ortho(clip: Rect.Like, near: number, far: number, out: Float32Array) {
-    let width = Rect.width(clip),
-        height = Rect.height(clip),
+export function ortho(clip: Rect, near: number, far: number, out: Float32Array) {
+    let width = clip.width,
+        height = clip.height,
         depth = near - far;
 
     out[0] = 2 / width;

@@ -13,17 +13,17 @@ export class PolygonModel extends Model {
         super(matrix);
     }
 
-    get bounds(): Rect.Like {
+    get bounds(): Rect {
         let { vertices } = this.mesh;
         let { x, y } = this.mapPointToWorldSpace(vertices.at(0));
         let bounds = Rect.dimensions(x, y, 0, 0);
         for (let i = 1; i < vertices.length; i++) {
-            Rect.unionPoint(bounds, this.mapPointToWorldSpace(vertices.at(i)), bounds);
+            bounds.unionPoint(this.mapPointToWorldSpace(vertices.at(i)));
         }
         return bounds;
     }
 
-    set bounds(dst: Rect.Like) { // Preserves orientation
+    set bounds(dst: Rect) { // Preserves orientation
         this.transform(Mat2d.rectToRect(this.bounds, dst));
     }
 
@@ -37,7 +37,7 @@ export class PolygonModel extends Model {
     }
 
     /** Scales this shape to fit inside the destination rect using the specified scale to fit option */
-    scaleToFit(dst: Rect.Like, stf = Mat2d.ScaleToFit.Fill) {
+    scaleToFit(dst: Rect, stf = Mat2d.ScaleToFit.Fill) {
         Mat2d.rectToRect(this.mesh.bounds, dst, stf, this.matrix);
     }
 
@@ -45,7 +45,7 @@ export class PolygonModel extends Model {
     stretchAcross({p1, p2}: LineSegment.Like) {
         // Translate center top to p1
         let b = this.mesh.bounds;
-        let cx = Rect.centerX(b);
+        let cx = b.centerX;
         let v = Vec2.fromPointToPoint({ x: cx, y: b.top }, p1);
         let t = Mat2d.translate(v, this.matrix);
         

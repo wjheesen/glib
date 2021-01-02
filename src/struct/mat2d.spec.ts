@@ -1,7 +1,6 @@
 import { expect } from 'chai';
-import { Point } from '..';
+import { Point, Rect } from '..';
 import { concat, conjugate, identity, invert, rotate, stretch, translate, Like, determinant, mapPoint, pivot, scale, mapRect, equals, sinCos, rectToRect, ScaleToFit, scaleToPoint, stretchRotateToPoint, copy} from './mat2d';
-import { dimensions, area, width, height, center, bottomRight, contains, topLeft } from './rect';
 
 describe('Mat2d', () => {
 
@@ -84,18 +83,18 @@ describe('Mat2d', () => {
             expect(mapPoint(t, {x: 2, y: 3})).deep.equals({x: 7, y: 16})
         })
         it('preserves the area of a rectangle', () => {
-            let r = dimensions(0, 0, 2, 7);
+            let r = Rect.dimensions(0, 0, 2, 7);
             let tr = mapRect(t, r);
-            expect(area(tr)).equals(area(r));
+            expect(tr.area).equals(r.area);
         })
     })
 
     describe('#scale()', () => {
         it('scales a rect by the specified vector', () => {
-            let r = dimensions(0, 0, 1, 1);
+            let r = Rect.dimensions(0, 0, 1, 1);
             let s = scale({x: 3, y: 2})
             let sr = mapRect(s, r);
-            expect(area(sr)).equals(6 * area(r))
+            expect(sr.area).equals(6 * r.area);
         })
         it('scales from the origin', () => {
             let o = {x: 0, y: 0};
@@ -119,10 +118,10 @@ describe('Mat2d', () => {
 
     describe('#stretch()', () => {
         it('preserves aspect ratio', () => {
-            let r = dimensions(0, 0, 1, 2);
+            let r = Rect.dimensions(0, 0, 1, 2);
             let s = stretch(3);
             let sr = mapRect(s, r);
-            expect(width(sr) / height(sr)).equals(width(r) / height(r));
+            expect(sr.aspect).equals(r.aspect);
         })
     })
 
@@ -157,37 +156,37 @@ describe('Mat2d', () => {
     })
 
     describe('#rectToRect()', () => {
-        let square = dimensions(0, 5, 5, 5);
-        let rectangle = dimensions(0, 2, 4, 2);
+        let square = Rect.dimensions(0, 5, 5, 5);
+        let rectangle = Rect.dimensions(0, 2, 4, 2);
         let options = [ScaleToFit.Center, ScaleToFit.End, ScaleToFit.Fill, ScaleToFit.Start];
         let mapped = options.map(option => mapRect(rectToRect(square, rectangle, option), square));
 
         it('fits the src rect inside the dst rect', () => {
             for (let result of mapped) {
-                expect(contains(rectangle, result)).to.be.true;
+                expect(rectangle.contains(result)).to.be.true;
             }
         })
         it('preserves aspect if the ScaleToFit option is set to Center, End, or Start', () => {
             for (let stf of [ScaleToFit.Center, ScaleToFit.End, ScaleToFit.Start]) {
                 let result = mapped[stf];
-                expect(width(result) / height(result)).equals(1);
+                expect(result.aspect).equals(1);
             }
         })
         it('can change aspect if ScaleToFit option is set to Fill', ()  => {
             let result = mapped[ScaleToFit.Fill];
-            expect(width(result) / height(result)).not.equals(1);
+            expect(result.aspect).not.equals(1);
         })
         it('ScaleToFit.Center centers the src rect inside the dst rect', () => {
             let result = mapped[ScaleToFit.Center];
-            expect(center(result)).deep.equals(center(rectangle));
+            expect(result.center()).deep.equals(rectangle.center());
         })
         it('ScaleToFit.End translates the src rect to the bottom right corner of the dst rect', () => {
             let result = mapped[ScaleToFit.End]
-            expect(bottomRight(result)).deep.equals(bottomRight(rectangle));
+            expect(result.bottomRight()).deep.equals(rectangle.bottomRight());
         })
         it('ScaleToFit.Start translates the src rect to the top left corner of the dst rect', () => {
             let result = mapped[ScaleToFit.Start];
-            expect(topLeft(result)).deep.equals(topLeft(rectangle));
+            expect(result.topLeft()).deep.equals(rectangle.topLeft());
         })
     })
 

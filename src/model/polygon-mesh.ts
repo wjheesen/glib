@@ -47,7 +47,7 @@ export class PolygonMesh extends Mesh {
      * Creates the mesh for a rectangle
      * @param id an optional id for the mesh.
      */
-    static rectangle(r: Rect.Like) {
+    static rectangle(r: Rect) {
         let vertices = PolygonMesh.rectangleVertices(r);
         let indices = PolygonMesh.regularIndices(4);
         return new PolygonMesh(vertices, indices);
@@ -57,12 +57,12 @@ export class PolygonMesh extends Mesh {
       * Extracts the vertices from the specified rect into a new vertex buffer.
       * @param rect the rect from which to extract the vertices.
       */
-    static rectangleVertices(r: Rect.Like) {
+    static rectangleVertices(r: Rect) {
         let vertices = Vec2Buffer.withLength(4);
-        Rect.topLeft(r, vertices.at(0));
-        Rect.bottomLeft(r, vertices.at(1));
-        Rect.bottomRight(r, vertices.at(2));
-        Rect.topRight(r, vertices.at(3));
+        r.topLeft(vertices.at(0));
+        r.bottomLeft(vertices.at(1));
+        r.bottomRight(vertices.at(2));
+        r.topRight(vertices.at(3));
         return vertices;
     }
 

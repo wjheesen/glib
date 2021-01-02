@@ -7,7 +7,7 @@ export class EllipseModel extends PolygonModel {
      * Measures the boundaries of a unit circle transformed to an ellipse by the specified matrix.
      * @param matrix the transformation matrix.
      */
-    static measureBoundaries(matrix: Mat2d.Like): Rect.Like {
+    static measureBoundaries(matrix: Mat2d.Like): Rect {
         // Performs singular value decomposition of the model matrix to extract
         // (1) The length of the semi-x axis (sx), which is equal to the first singular value in the Sigma matrix
         // (2) The length of the semi-y axis (sy), which is equal to the second singular value in the Sigma matrix
@@ -40,25 +40,28 @@ export class EllipseModel extends PolygonModel {
         // Boundaries:
         let x = Math.sqrt(sx2*cos2 + sy2*sin2);
         let y = Math.sqrt(sx2*sin2 + sy2*cos2);
-        return { left: tx - x, right: tx + x, top: ty + y, bottom: ty - y };
+        return Rect.copy({ 
+            left: tx - x, right: tx + x, 
+            top: ty + y, bottom: ty - y 
+        });
     }
 
     constructor(matrix?: Mat2d.Like) {
         super(EllipseProgram.mesh, matrix);
     }
 
-    get bounds(): Rect.Like {
+    get bounds(): Rect {
         return EllipseModel.measureBoundaries(this.matrix);
     }
 
-    set bounds(dst: Rect.Like) { // Preserves orientation
+    set bounds(dst: Rect) { // Preserves orientation
         this.transform(Mat2d.rectToRect(this.bounds, dst));
     }
 
     /** Checks if this ellipse contains the specified point. */
     contains(p: Point.Like) {
         let modelPoint = this.mapPointToModelSpace(p);
-        if(Rect.containsPoint(this.mesh.bounds, modelPoint)){
+        if(this.mesh.bounds.containsPoint(modelPoint)){
             return Vec2.length2(modelPoint) <= 1;
         } 
         return false;
