@@ -1,7 +1,7 @@
 export * as Color from './struct/color';
 export * as ColorF from './struct/colorf';
 export * as Ellipse from './struct/ellipse';
-export * as LineSegment from './struct/line-segment';
+export * from './struct/line-segment';
 export * as Mat2d from './struct/mat2d';
 export * as Point from './struct/point';
 export * from './struct/rect';
@@ -25,3 +25,6 @@ export * from './model/ellipse-model';
 export * from './event/screen-point';
 export * from './rendering/camera';
 export * from './rendering/renderer';
+export * from './rendering/surface';
+export * from './event/pointer-event';
+export * from './event/wheel-event';

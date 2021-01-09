@@ -110,7 +110,7 @@ describe('PolygonModel', () => {
     describe('#stretchAcrossLine()', () => {
         let hex = new PolygonModel(PolygonMesh.regularPolygon(6));
         let aspect = getAspect();
-        let line: LineSegment.Like = {p1: {x: 3, y: 12}, p2: {x: 15, y: -6}};
+        let line = new LineSegment({x: 3, y: 12}, {x: 15, y: -6});
         hex.stretchAcross(line);
 
         it ('maps the topmost point to start of the line', () => {

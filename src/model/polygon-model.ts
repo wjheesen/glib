@@ -42,7 +42,7 @@ export class PolygonModel extends Model {
     }
 
     /** Stretch-rotates this shape across the specified line segment */
-    stretchAcross({p1, p2}: LineSegment.Like) {
+    stretchAcross({p1, p2}: LineSegment) {
         // Translate center top to p1
         let b = this.mesh.bounds;
         let cx = b.centerX;
