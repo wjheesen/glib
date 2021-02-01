@@ -15,6 +15,21 @@ export class Surface {
         public readonly scene: Drawable
     ) {}
 
+    startRenderLoop() {
+        this.requestRender();
+        this.checkRender();
+    }
+
+    /** Checks each frame if the surface needs to be re-rendered. */
+    private checkRender = () => {
+        // Resize surface if necessary
+        this.resize()
+        // Notify surface of animation frame
+        this.onAnimationFrame()
+        // Keep calling this function every frame
+        requestAnimationFrame(this.checkRender);
+    }
+
     /**
      * Requests that this surface be re-rendered.
      */
