@@ -2,6 +2,11 @@ import { Mat2d, StructBuffer } from '..';
 
 export class Mat2dBuffer extends StructBuffer<Float32Array, Mat2d.Like> implements Mat2d.Like {
 
+    /** Creates a mat2d buffer large enough to hold the specified number of mat2ds. */
+    static withLength(n: number) {
+        return new this(new Float32Array(n * 6));
+    }
+
     get componentLength() {
         return 6;
     }

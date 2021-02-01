@@ -70,7 +70,7 @@ export class Compiler {
 
         constExports.addDeclaration({
             name: "attributeRenaming",
-            initializer: JSON.stringify(uniform.renaming),
+            initializer: JSON.stringify(attribute.renaming),
         });
 
         constExports.addDeclaration({
@@ -88,7 +88,7 @@ export class Compiler {
     private parseVariables(program: Program, type: 'uniform'|'attribute') {
         let variables = <Variable[]> [];
         let renaming = <StringMap> {};
-        let regex = new RegExp(`${type} (.+?) (.+?)`, 'g');
+        let regex = new RegExp(`${type} (.+?) (.+?);`, 'g');
         let match = <RegExpExecArray> null;
         for (let shader of program.shaders) {
             while(match = regex.exec(shader.contents)) {

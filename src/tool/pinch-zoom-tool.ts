@@ -1,5 +1,4 @@
-import { LineSegment, Point, Pointer, PointerEventListener } from "..";
-import { Vec2 } from "../../dist";
+import { LineSegment, Point, Pointer, PointerEventListener, Vec2 } from "..";
 
 export class PinchZoomTool extends PointerEventListener {
 
