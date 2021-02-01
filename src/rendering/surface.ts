@@ -1,4 +1,6 @@
-import { Drawable, Point, Renderer, Rect, Vec2, ScreenPoint } from '..';
+import { Drawable, Point, Renderer, Rect, Vec2, ScreenPoint, PointerEventListener } from '..';
+import { PointerEventDetector } from '../event/pointer-event';
+import { WheelEventDetector } from '../event/wheel-event';
 
 /** A rendering surface linked to an HTMLCanvasElement (the drawing buffer). */
 export class Surface {
@@ -40,7 +42,7 @@ export class Surface {
     /**
      * Re-renders this surface if it has a render request.
      */
-    onAnimationFrame(){
+    onAnimationFrame() {
         if(this.hasRenderRequest){
             this.scene.draw(this.renderer);
             this.hasRenderRequest = false;
@@ -61,6 +63,18 @@ export class Surface {
             // Request render to show changes
             this.requestRender();
         }
+    }
+
+    startDetectingPointerEvents() {
+        let detector = new PointerEventDetector(this);
+        detector.startListening();
+        return detector;
+    }
+
+    startDetectingWheelEvents() {
+        let detector = new WheelEventDetector(this);
+        detector.startListening();
+        return detector;
     }
 
     /** Sends a request to pan the image displayed by this surface. */

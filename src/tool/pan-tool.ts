@@ -5,7 +5,7 @@ export class PanTool extends PointerEventListener {
     private previous: Point.Like;
 
     wherePointer(p: Pointer) {
-        return p.activePointers.length == 1;
+        return p.isDown && p.activePointers.length == 1;
     }
 
     onPointerDown(p: Pointer) {
@@ -13,9 +13,9 @@ export class PanTool extends PointerEventListener {
     }
 
     onPointerMove({position, surface}: Pointer) {
-        let toPrevious = Vec2.fromPointToPoint(this.previous, position);
+        let toPrevious = Vec2.fromPointToPoint(position, this.previous); 
         let actual = surface.pan(toPrevious);
-        Vec2.add(actual, this.previous, this.previous);
+        Vec2.add(actual, position, this.previous);
     }
 }
    

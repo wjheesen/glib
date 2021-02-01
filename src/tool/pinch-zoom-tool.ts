@@ -6,7 +6,7 @@ export class PinchZoomTool extends PointerEventListener {
     private previousFocus: Point.Like;
 
     wherePointer(p: Pointer) {
-        return p.activePointers.length == 2;
+        return p.isDown && p.activePointers.length == 2;
     }
 
     onPointerDown(p: Pointer) {

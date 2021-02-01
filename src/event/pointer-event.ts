@@ -7,11 +7,11 @@ export const enum PointerStatus {
 export class Pointer {
     constructor(
         public readonly id: number,
-        public readonly index: number,
         public readonly status: PointerStatus,
         public readonly surface: Surface,
         public readonly position: Point.Like,
         public readonly isPrimary: boolean,
+        public readonly isDown: boolean,
         public readonly activePointers: Pointer[],
     ) {}
 }
@@ -26,7 +26,7 @@ export class PointerEventListener {
 
 export class PointerEventDetector {
 
-    public readonly activePointers = <Pointer[]> {};
+    public readonly activePointers = <Pointer[]> [];
     private listeners = <PointerEventListener[]> [];
 
     constructor(
@@ -80,20 +80,33 @@ export class PointerEventDetector {
     }
 
     private addPointer(e: PointerEvent, status: PointerStatus) {
-        let pointer = this.newPointer(e, status);
-        this.activePointers.push(pointer);
+        let index = this.getPointerIndex(e.pointerId);
+        let isDown = status == PointerStatus.Down || !!this.activePointers[index]?.isDown;
+        let pointer = this.newPointer(e, status, isDown);
+        this.surface.canvasEl.setPointerCapture(pointer.id);
+        this.activePointers[index] = pointer;
         return pointer;
     }
 
-    private newPointer(e: PointerEvent, status: PointerStatus) {
+    private newPointer(e: PointerEvent, status: PointerStatus, isDown: boolean) {
         return new Pointer(
-            e.pointerId, this.activePointers.length, 
-            status, this.surface, this.surface.mapScreenPointToWorld(e),
-            e.isPrimary, this.activePointers
+            e.pointerId, status, this.surface, 
+            this.surface.mapScreenPointToWorld(e),
+            e.isPrimary, isDown, this.activePointers
         );
     }
 
-    private removePointer(p: Pointer) {
-        delete this.activePointers[p.index];
+    private getPointerIndex(pointerId: number): number {
+        for (let i = 0; i < this.activePointers.length; i++) {
+            if (this.activePointers[i].id == pointerId) {
+                return i;
+            }
+        }
+        return this.activePointers.length;
+    }
+
+    private removePointer(pointer: Pointer) {
+        this.surface.canvasEl.releasePointerCapture(pointer.id);
+        this.activePointers.splice(this.getPointerIndex(pointer.id), 1);
     }
 }
