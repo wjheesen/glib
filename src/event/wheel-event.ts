@@ -37,6 +37,7 @@ export class WheelEventDetector {
     }
 
     private onWheel = (e: WheelEvent) => {
+        e.preventDefault(); // TODO: maybe only prevent default if the onWheel function returns true?
         let wheel = new Wheel(e.deltaY, this.surface, this.surface.mapScreenPointToWorld(e));
         this.listeners.forEach(l => l.onWheel(wheel));
     }

@@ -9,7 +9,7 @@ export class WheelZoomTool implements WheelEventListener {
     ){}
 
     onWheel(wheel: Wheel) {
-        let scale = wheel.deltaY > 0 ? this.scaleFactor : 1 / this.scaleFactor;
+        let scale = wheel.deltaY < 0 ? this.scaleFactor : 1 / this.scaleFactor;
         let actual = wheel.surface.zoomToPoint(scale, wheel.position);
     }
 }
