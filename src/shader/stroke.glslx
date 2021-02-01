@@ -1,12 +1,19 @@
 precision mediump float;
 
-uniform mat4 projection;         // Projection matrix (maps from world space to clip space)
-uniform vec4 color;              // Color of outline
-uniform float lineWidth;         // Width of lines making up outline
-attribute mat2 model;            // Model matrix (maps from model space to world space)
-attribute vec2 offset;           // Third column of model matrix
-attribute vec2 position;         // Position of current vertex in model space
-attribute vec2 miter;            // The miter to apply to this vertex
+/** Maps from world space to clip space */
+uniform mat4 projection;       
+/** Stroke color */
+uniform vec4 color;      
+/** Width of lines making up the stroke */ 
+uniform float lineWidth;    
+/** Maps from model space to world space */     
+attribute mat2 model;   
+/** Third column of model matrix */        
+attribute vec2 offset;    
+/** Position of current vertex in model space */        
+attribute vec2 position;  
+/** The miter to apply to this vertex */        
+attribute vec2 miter;           
 
 /**
  * Creates a mat2 set to rotate by the specified angle (in radians), with a pivot point at the origin.

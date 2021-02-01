@@ -1,10 +1,15 @@
 precision mediump float;
 
-uniform mat4 projection; // Projection matrix (maps from world space to clip space)
-uniform vec4 color;      // Color of shape
-attribute mat2 model;    // Model matrix (maps from model space to world space)
-attribute vec2 offset;   // Third column of model matrix
-attribute vec2 position; // Position of current vertex in model space
+/** Maps from world space to clip space */
+uniform mat4 projection; 
+/** The fill color */
+uniform vec4 color;     
+/** Maps from model space to world space */  
+attribute mat2 model;   
+/** Third column of model matrix */
+attribute vec2 offset;   
+/** Position of current vertex in model space */
+attribute vec2 position; 
 
 export void vertex(){
     vec2 worldPosition = (model * position) + offset;

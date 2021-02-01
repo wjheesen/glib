@@ -1,16 +1,25 @@
 precision mediump float;
 
-uniform mat4 projection;       // Projection matrix (maps from world space to clip space)
-uniform vec4 fillColor;        // Fill color for ellipse
-uniform vec4 strokeColor;      // Stroke color for ellipse
-uniform float lineWidth;       // Width of lines making up stroke
+/** Maps from world space to clip space */
+uniform mat4 projection;    
+/** Fill color for ellipse */   
+uniform vec4 fillColor;    
+/** Stroke color for ellipse */    
+uniform vec4 strokeColor;     
+/** Width of lines making up stroke */
+uniform float lineWidth;       
 
-attribute mat2 model;          // Instanced model matrix (maps from model space to world space)
-attribute vec2 offset;         // Instanced model offset
-attribute vec2 position;       // Position of model vertex: one of (-1, 1), (-1, -1), (1, -1), (1, 1)
+/** Instanced model matrix (maps from model space to world space) */
+attribute mat2 model;          
+/** Instanced model offset */ 
+attribute vec2 offset;     
+/** Position of model vertex: one of (-1, 1), (-1, -1), (1, -1), (1, 1) */    
+attribute vec2 position;       
 
-varying vec2 fillPosition;     // Position of pixel relative to boundaries of ellipse in NDC space
-varying vec2 strokePosition;   // Position of pixel relative to boundaries of stroked ellipse in NDC space
+/** Position of pixel relative to boundaries of ellipse in NDC space */
+varying vec2 fillPosition;    
+/** Position of pixel relative to boundaries of stroked ellipse in NDC space */ 
+varying vec2 strokePosition; 
 
 /**
  * Creates a mat2 set to rotate by the specified angle (in radians), with a pivot point at the origin.

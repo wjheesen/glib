@@ -84,7 +84,7 @@ export class FillProgram extends Program<Shader.Uniforms, Shader.Attributes> {
 
     /** Loads the fill color into this program. */
     private loadColor(gl: WebGLRenderingContext) {
-        gl.uniform4fv(this.uniforms.fillColor, this.color.data);
+        gl.uniform4fv(this.uniforms.color, this.color.data);
     }
 
     private loadVertices(gl: WebGLRenderingContext, mesh: Mesh) {
