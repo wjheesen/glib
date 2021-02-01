@@ -3,13 +3,11 @@ import { Camera, Program } from '..';
 /** Helper class for rendering graphics with WebGL. */
 export class Renderer {
 
-    public readonly angleExt = this.gl.getExtension('ANGLE_instanced_arrays');
-
     /** The location of the currently bound program. */
     private currentProgram: Program;
 
     constructor(
-        public readonly gl: WebGLRenderingContext, 
+        public readonly gl: WebGL2RenderingContext, 
         public readonly camera: Camera,
     ) {}
 

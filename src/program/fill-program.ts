@@ -23,7 +23,7 @@ export class FillProgram extends Program<Shader.Uniforms, Shader.Attributes> {
         return program;
     }
 
-    onAttach({ gl, angleExt }: Renderer) {
+    onAttach({ gl }: Renderer) {
         let column1 = this.attribs.model;
         let column2 = column1 + 1;
         let column3 = this.attribs.offset;
@@ -38,44 +38,44 @@ export class FillProgram extends Program<Shader.Uniforms, Shader.Attributes> {
         gl.enableVertexAttribArray(column3);
         
         // Only change the model matrix when the instance changes
-        angleExt.vertexAttribDivisorANGLE(column1, 1); 
-        angleExt.vertexAttribDivisorANGLE(column2, 1);
-        angleExt.vertexAttribDivisorANGLE(column3, 1);
+        gl.vertexAttribDivisor(column1, 1); 
+        gl.vertexAttribDivisor(column2, 1);
+        gl.vertexAttribDivisor(column3, 1);
     }
 
-    onDetach({angleExt}: Renderer){
+    onDetach({gl}: Renderer){
         let column1 = this.attribs.model;
         let column2 = column1 + 1;
         let column3 = this.attribs.offset;
 
         // Disable instancing of 3x2 model matrix (because it affects global state)
-        angleExt.vertexAttribDivisorANGLE(column1, 0);
-        angleExt.vertexAttribDivisorANGLE(column2, 0);
-        angleExt.vertexAttribDivisorANGLE(column3, 0);    
+        gl.vertexAttribDivisor(column1, 0);
+        gl.vertexAttribDivisor(column2, 0);
+        gl.vertexAttribDivisor(column3, 0);    
     }
 
     draw(renderer: Renderer, mesh: Mesh, matrices: Mat2dBuffer) {
-        let {gl, angleExt} = renderer;
+        let { gl } = renderer;
         renderer.useProgram(this);
         this.loadProjection(gl, renderer.camera.matrix);
         this.loadColor(gl);
         this.loadVertices(gl, mesh);
         this.loadMatrices(gl, matrices);
         if (mesh.indices) {
-            angleExt.drawElementsInstancedANGLE(gl.TRIANGLES, mesh.indices.length, gl.UNSIGNED_SHORT, mesh.indexBufferOffset, matrices.length)
+            gl.drawElementsInstanced(gl.TRIANGLES, mesh.indices.length, gl.UNSIGNED_SHORT, mesh.indexBufferOffset, matrices.length)
         } else {
-            angleExt.drawArraysInstancedANGLE(gl.TRIANGLES, 0, mesh.vertices.length, matrices.length);
+            gl.drawArraysInstanced(gl.TRIANGLES, 0, mesh.vertices.length, matrices.length);
         }
     }
 
     drawTriangleStrip(renderer: Renderer, vertices: Vec2Buffer, matrices: Mat2dBuffer) {
-        let { gl, angleExt } = renderer;
+        let { gl } = renderer;
         renderer.useProgram(this);
         this.loadProjection(gl, renderer.camera.matrix);
         this.loadColor(gl);
         this.loadLineVertices(gl, vertices);
         this.loadMatrices(gl, matrices);
-        angleExt.drawArraysInstancedANGLE(gl.TRIANGLE_STRIP, 0, vertices.length, matrices.length);
+        gl.drawArraysInstanced(gl.TRIANGLE_STRIP, 0, vertices.length, matrices.length);
     }
 
     private loadProjection(gl: WebGLRenderingContext, projection: Float32Array) {
