@@ -23,7 +23,7 @@ export class EllipseProgram extends Program<Shader.Uniforms, Shader.Attributes> 
         return program;
     }
 
-    onAttach({gl}: Renderer) {
+    onAttach({gl, angleExt}: Renderer) {
         let c1 = this.attribs.model;
         let c2 = c1 + 1;
         let c3 = this.attribs.offset;
@@ -40,31 +40,31 @@ export class EllipseProgram extends Program<Shader.Uniforms, Shader.Attributes> 
         gl.enableVertexAttribArray(c1);
         gl.enableVertexAttribArray(c2);
         gl.enableVertexAttribArray(c3);
-
-        gl.vertexAttribDivisor(c1, 1);
-        gl.vertexAttribDivisor(c2, 1);
-        gl.vertexAttribDivisor(c3, 1);
+        
+        angleExt.vertexAttribDivisorANGLE(c1, 1);
+        angleExt.vertexAttribDivisorANGLE(c2, 1);
+        angleExt.vertexAttribDivisorANGLE(c3, 1);
     }
 
-    onDetach({gl}: Renderer) {
+    onDetach({angleExt}: Renderer) {
         let c1 = this.attribs.model;
         let c2 = c1 + 1;
         let c3 = this.attribs.offset;
 
-        gl.vertexAttribDivisor(c1, 0);
-        gl.vertexAttribDivisor(c2, 0);
-        gl.vertexAttribDivisor(c3, 0);       
+        angleExt.vertexAttribDivisorANGLE(c1, 0);
+        angleExt.vertexAttribDivisorANGLE(c2, 0);
+        angleExt.vertexAttribDivisorANGLE(c3, 0);       
     }
 
     draw(renderer: Renderer, matrices: Mat2dBuffer) {
-        let {gl, camera } = renderer;
+        let {gl, angleExt, camera } = renderer;
         renderer.useProgram(this);
         this.loadProjection(gl, camera.matrix);
         this.loadMatrices(gl, matrices);
         this.loadFillColor(gl);
         this.loadStrokeColor(gl);
         this.loadLineWidth(gl);
-        gl.drawArraysInstanced(gl.TRIANGLE_FAN, 0, 4, matrices.length);
+        angleExt.drawArraysInstancedANGLE(gl.TRIANGLE_FAN, 0, 4, matrices.length);
     }
 
     private loadProjection(gl: WebGLRenderingContext, projection: Float32Array) {

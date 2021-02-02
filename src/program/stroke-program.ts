@@ -24,7 +24,7 @@ export class StrokeProgram extends Program<Shader.Uniforms, Shader.Attributes> {
         return program;
     }
 
-    onAttach({ gl }: Renderer) {
+    onAttach({ gl, angleExt }: Renderer) {
         let column1 = this.attribs.model;
         let column2 = column1 + 1;
         let column3 = this.attribs.offset;
@@ -39,27 +39,27 @@ export class StrokeProgram extends Program<Shader.Uniforms, Shader.Attributes> {
         gl.enableVertexAttribArray(column3);
         
         // Only change the model matrix when the instance changes
-        gl.vertexAttribDivisor(column1, 1); 
-        gl.vertexAttribDivisor(column2, 1);
-        gl.vertexAttribDivisor(column3, 1);
+        angleExt.vertexAttribDivisorANGLE(column1, 1); 
+        angleExt.vertexAttribDivisorANGLE(column2, 1);
+        angleExt.vertexAttribDivisorANGLE(column3, 1);
 
         // Enable the miter array
         gl.enableVertexAttribArray(this.attribs.miter);
     }
 
-    onDetach({gl}: Renderer){
+    onDetach({angleExt}: Renderer){
         let column1 = this.attribs.model;
         let column2 = column1 + 1;
         let column3 = this.attribs.offset;
 
         // Disable instancing of 3x2 model matrix (because it affects global state)
-        gl.vertexAttribDivisor(column1, 0);
-        gl.vertexAttribDivisor(column2, 0);
-        gl.vertexAttribDivisor(column3, 0);    
+        angleExt.vertexAttribDivisorANGLE(column1, 0);
+        angleExt.vertexAttribDivisorANGLE(column2, 0);
+        angleExt.vertexAttribDivisorANGLE(column3, 0);    
     }
 
     draw(renderer: Renderer, mesh: Mesh, matrices: Mat2dBuffer) {
-        let {gl} = renderer;
+        let {gl, angleExt} = renderer;
         renderer.useProgram(this);
         this.loadProjection(gl, renderer.camera.matrix);
         this.loadColor(gl);
@@ -67,7 +67,7 @@ export class StrokeProgram extends Program<Shader.Uniforms, Shader.Attributes> {
         this.loadVertices(gl, mesh);
         this.loadMiters(gl, mesh);
         this.loadMatrices(gl, matrices);
-        gl.drawElementsInstanced(gl.TRIANGLE_STRIP, mesh.strokeIndexCount, gl.UNSIGNED_SHORT, mesh.strokeIndexBufferOffset, matrices.length);
+        angleExt.drawElementsInstancedANGLE(gl.TRIANGLE_STRIP, mesh.strokeIndexCount, gl.UNSIGNED_SHORT, mesh.strokeIndexBufferOffset, matrices.length);
     }
 
     private loadProjection(gl: WebGLRenderingContext, projection: Float32Array) {
