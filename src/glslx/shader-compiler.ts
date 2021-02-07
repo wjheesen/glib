@@ -1,7 +1,7 @@
 import { Project, SourceFile, VariableDeclarationKind} from 'ts-morph';
 import { compile, Options, Program } from 'glslx';
 
-export class Compiler {
+export class ShaderCompiler {
 
     private readonly options: Options = {
         disableRewriting: false,

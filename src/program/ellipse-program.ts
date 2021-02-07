@@ -1,5 +1,5 @@
 import { ColorfBuffer, Mat2dBuffer, Program, ProgramUtil, PolygonMesh, Rect, Renderer } from '..';
-import * as Shader from '../shader/ellipse'
+import * as Shader from './ellipse-shader'
 
 /** Program for rendering ellipses. */
 export class EllipseProgram extends Program<Shader.Uniforms, Shader.Attributes> {

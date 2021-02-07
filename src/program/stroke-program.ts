@@ -1,5 +1,5 @@
 import { Program, ColorfBuffer, Mesh, Renderer, ProgramUtil, Mat2dBuffer, Vec2Buffer } from "..";
-import * as Shader from '../shader/stroke'
+import * as Shader from './stroke-shader'
 
 export class StrokeProgram extends Program<Shader.Uniforms, Shader.Attributes> {
 

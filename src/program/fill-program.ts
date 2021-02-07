@@ -1,5 +1,5 @@
 import { Program, ColorfBuffer, Mesh, Renderer, ProgramUtil, Mat2dBuffer, Vec2Buffer } from "..";
-import * as Shader from '../shader/fill'
+import * as Shader from './fill-shader'
 
 /**  Program for rendering polygons filled with a uniform color. */
 export class FillProgram extends Program<Shader.Uniforms, Shader.Attributes> {

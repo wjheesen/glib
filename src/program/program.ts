@@ -9,7 +9,6 @@ export interface UniformLocationMap {
 export interface AttributeLocationMap {
     [key: string]: number;
 }
-
 export abstract class Program<U = UniformLocationMap, A = AttributeLocationMap> {
 
     /** The location of this program in WebGL. */
