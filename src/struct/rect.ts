@@ -12,8 +12,12 @@ export interface RectLike {
 }
 export class Rect implements RectLike {
 
-    static copy(r: RectLike) {
-        return new Rect(r.left, r.top, r.right, r.bottom);
+    static copy(r: RectLike, out = Rect.empty()) {
+        out.left = r.left;
+        out.top = r.top;
+        out.right = r.right;
+        out.bottom = r.bottom;
+        return out;
     }
 
     /** Creates an empty rect */
@@ -168,6 +172,36 @@ export class Rect implements RectLike {
     offsetY(dy: number) {
         this.top += dy;
         this.bottom += dy;
+    }
+
+    /** Scales this rect out from it's center by the specified (x,y) percentages. */
+    scale({x, y}: Vec2.Like) {
+        this.scaleX(x);
+        this.scaleY(y);
+    }
+
+    /** Scales this rect horizontally out from its center */
+    scaleX(dx: number) {
+        let cx = this.centerX;
+        this.offsetX(-cx);
+        this.left *= dx;
+        this.right *= dx;
+        this.offsetX(cx);
+    }
+
+    /** Scales this rect vertically out from its center */
+    scaleY(dy: number) {
+        let cy = this.centerY;
+        this.offsetY(-cy);
+        this.top *= dy;
+        this.bottom *= dy;
+        this.offsetY(cy);
+    }
+
+    /** Stretches this rect out from its center */
+    stretch(k: number) {
+        this.scaleX(k);
+        this.scaleY(k);
     }
 
     /** Checks if this rect contains the other rect */

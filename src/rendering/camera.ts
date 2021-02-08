@@ -10,7 +10,7 @@ export class Camera {
     public readonly view = Rect.copy(this.world);
 
     /** The current position of the camera in relation to the center of the world. */
-    public readonly position = this.world.center();
+    public readonly position = <Vec2.Like> {x: 0, y: 0};
 
     /** The current zoom setting for this camera. */
     public zoom = 1;
@@ -31,14 +31,21 @@ export class Camera {
      * @param vh the new height of the viewport.
      */
     setViewport(vw: number, vh: number) {
-        // Compute width to height ratio of viewport and world
-        let vr = vw / vh, wr = this.world.aspect;
+        // Reset view
+        Rect.copy(this.world, this.view);
+
         // Scale width or height of view to match aspect of viewport
-        let m = Mat2d.scale(wr < vr ? {x: vr / wr, y: 1} : {x: 1, y: wr / vr});
+        let vr = vw / vh, wr = this.world.aspect;
+        if (wr < vr) {
+            this.view.scaleX(vr / wr);
+        } else {
+            this.view.scaleY(wr / vr);
+        }
+    
         // Apply our other camera settings on top
-        Mat2d.concat(Mat2d.stretch(1 / this.zoom), m, m);
-        Mat2d.concat(Mat2d.translate(this.position), m, m);
-        Mat2d.mapRect(m, this.world, this.view);
+        this.view.stretch(1 / this.zoom);
+        this.view.offset(this.position);
+
         // Update matrix to reflect changes to view
         this.updateMatrix();
     }
@@ -106,8 +113,7 @@ export class Camera {
             actualScaleFactor = desiredScaleFactor;
             this.zoom = targetZoom;
         }
-        let m = Mat2d.pivot(Mat2d.stretch(1 / actualScaleFactor), this.position);
-        Mat2d.mapRect(m, this.view, this.view);
+        this.view.stretch(1 / actualScaleFactor);
         this.updateMatrix();
         return actualScaleFactor;
     }
