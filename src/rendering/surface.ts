@@ -43,7 +43,7 @@ export class Surface {
      * Re-renders this surface if it has a render request.
      */
     onAnimationFrame() {
-        if(this.hasRenderRequest){
+        if(this.hasRenderRequest || this.scene.hasRenderRequest()){
             this.scene.draw(this.renderer);
             this.hasRenderRequest = false;
         }

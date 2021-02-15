@@ -21,7 +21,7 @@ export class PointerEventListener {
     onPointerDown(p: Pointer) {}
     onPointerMove(p: Pointer) {}
     onPointerUp(p: Pointer) {}
-    onPointerCancel(p: Pointer) {}
+    onPointerCancel(p: Pointer) { this.onPointerUp(p); }
 }
 
 export class PointerEventDetector {
@@ -70,7 +70,7 @@ export class PointerEventDetector {
     }
 
     private onPointerCancel = (e: PointerEvent) => {
-        let pointer = this.addPointer(e, PointerStatus.Up);
+        let pointer = this.addPointer(e, PointerStatus.Cancel);
         this.dispatchEvent(pointer, l => l.onPointerCancel(pointer));
         this.removePointer(pointer);
     }
