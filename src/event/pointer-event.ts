@@ -16,7 +16,7 @@ export class Pointer {
     ) {}
 }
 
-export class PointerEventListener {
+export abstract class PointerEventListener {
     wherePointer(p: Pointer) { return true; }
     onPointerDown(p: Pointer) {}
     onPointerMove(p: Pointer) {}
@@ -51,6 +51,10 @@ export class PointerEventDetector {
 
     addListener(listener: PointerEventListener) {
         this.listeners.push(listener);
+    }
+
+    removeListener(listener: PointerEventListener) {
+        this.listeners = this.listeners.filter(l => l !== listener);
     }
 
     private onPointerDown = (e: PointerEvent) => {
